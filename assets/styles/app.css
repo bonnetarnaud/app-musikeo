@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+
+  .button {
+    @apply flex w-fit justify-center rounded-md bg-orange-500 hover:bg-orange-700 px-4 py-2 font-medium leading-6 text-white shadow-sm h-fit;
+  }
+
+  .button:hover {
+    @apply no-underline;
+  }
+  .button svg {
+    @apply mr-2;
+  }
+  .svg-only svg {
+    @apply mr-0;
+  }
+  .button-small {
+    @apply px-2 py-1 text-sm;
+  }
+  .button-primary {
+    @apply bg-[#13A4AA] hover:bg-[#1A7F83] rounded-full;
+  }
+  .button-secondary {
+    @apply  bg-slate-100 text-black hover:bg-slate-200 rounded-full;
+  }
+  .button-big {
+    @apply px-6 py-3 text-lg;
+  }

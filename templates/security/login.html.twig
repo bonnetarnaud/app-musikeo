@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block body %}
+
+<div class="bg-white dark:bg-gray-900">
+    <div class="flex justify-center h-screen">
+        <div class="hidden lg:block lg:w-2/3">
+            <img class="object-cover size-full" src="{{ asset('images/moto-2.jpg') }}" alt="background">
+        </div>
+        
+        <div class="flex items-center w-full max-w-md px-6 mx-auto lg:w-2/6">
+            <div class="flex-1">
+                <div class="text-center">
+                    <img class="w-32 mx-auto" src="{{ asset('images/logo.png') }}" alt="logo">
+                </div>
+                <div class="mt-8">
+                        <form method="post" class="space-y-6">
+                        {% if error %}
+                            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                        {% endif %}
+
+                        {% if app.user %}
+                            <div class="mb-3">
+                                You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+                            </div>
+                        {% endif %}
+
+                        <div>
+                            <label for="inputUsername" class="block text-sm font-medium leading-6 text-gray-900">Identifiant</label>
+                            <div class="mt-2">
+                            <input 
+                            type="email" 
+                            value="{{ last_username }}" 
+                            name="email" 
+                            id="inputEmail" 
+                            class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" 
+                            placeholder="votre@email.com"
+                            autocomplete="email" 
+                            required 
+                            autofocus
+                        >
+                        </div>
+
+                        <div class="mt-2">
+                            <label for="inputPassword" class="block text-sm font-medium leading-6 text-gray-900">Mot de passe</label>
+                            <input id="inputPassword" 
+                            placeholder="********"
+                            name="password" type="password" 
+                            autocomplete="current-password" required 
+                            class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                       
+                           
+                        </div>
+
+
+                        <input type="hidden" name="_csrf_token"
+                            value="{{ csrf_token('authenticate') }}"
+                        >
+                        
+                        <div>
+                            <button type="submit" 
+                            class="button button-primary uppercase w-full">
+                            Connexion
+                            </button>
+                        </div>
+                    
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

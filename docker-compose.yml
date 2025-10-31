@@ -1,0 +1,65 @@
+services:
+  # PHP-FPM pour Symfony
+  app:
+    image: php:8.2-fpm
+    container_name: app-musikeo
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - app-musikeo-network
+    depends_on:
+      - database
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+  # MySQL
+  database:
+    image: mysql:8.3
+    container_name: app-musikeo-database
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: musikeo
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app-musikeo-network
+
+  # Nginx pour Symfony
+  web:
+    image: nginx:latest
+    container_name: app-musikeo-web
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    ports:
+      - "8080:80"   # Symfony sur localhost:8080
+    networks:
+      - app-musikeo-network
+    depends_on:
+      - app
+
+  # PhpMyAdmin
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: app-musikeo-phpmyadmin
+    environment:
+      PMA_HOST: database
+      PMA_USER: root
+      PMA_PASSWORD: root
+    ports:
+      - "8081:80"   # PhpMyAdmin sur localhost:8081
+    networks:
+      - app-musikeo-network
+    depends_on:
+      - database
+
+volumes:
+  mysql_data:
+
+networks:
+  app-musikeo-network:
+    driver: bridge
