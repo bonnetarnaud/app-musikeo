@@ -28,6 +28,10 @@ class Enrollment
     #[ORM\Column(length: 20)]
     private ?string $status = null;
 
+    #[ORM\ManyToOne(targetEntity: Organization::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Organization $organization = null;
+
     public const STATUS_PENDING = 'en_attente';
     public const STATUS_VALIDATED = 'valide';
     public const STATUS_CANCELLED = 'annule';
@@ -87,6 +91,18 @@ class Enrollment
     public function setStatus(string $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getOrganization(): ?Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(?Organization $organization): static
+    {
+        $this->organization = $organization;
 
         return $this;
     }

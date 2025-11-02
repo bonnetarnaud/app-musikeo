@@ -18,13 +18,16 @@ class Course
     #[ORM\Column(length: 100)]
     private ?string $name = null;
 
-    #[ORM\ManyToOne(inversedBy: 'courses')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Instrument $instrument = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'courses')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Teacher $teacher = null;
+
+    #[ORM\ManyToOne(targetEntity: Organization::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Organization $organization = null;
 
     /**
      * @var Collection<int, Enrollment>
@@ -61,14 +64,14 @@ class Course
         return $this;
     }
 
-    public function getInstrument(): ?Instrument
+    public function getDescription(): ?string
     {
-        return $this->instrument;
+        return $this->description;
     }
 
-    public function setInstrument(?Instrument $instrument): static
+    public function setDescription(?string $description): static
     {
-        $this->instrument = $instrument;
+        $this->description = $description;
 
         return $this;
     }
@@ -81,6 +84,18 @@ class Course
     public function setTeacher(?Teacher $teacher): static
     {
         $this->teacher = $teacher;
+
+        return $this;
+    }
+
+    public function getOrganization(): ?Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(?Organization $organization): static
+    {
+        $this->organization = $organization;
 
         return $this;
     }

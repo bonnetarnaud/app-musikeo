@@ -1,0 +1,3 @@
+aside {
+    @apply relative w-64 min-h-screen p-4 fixed lg:static lg:inset-0 flex flex-col justify-between;
+}

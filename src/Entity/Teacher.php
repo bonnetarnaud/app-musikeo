@@ -18,12 +18,6 @@ class Teacher extends User
     private ?string $biography = null;
 
     /**
-     * @var Collection<int, Instrument>
-     */
-    #[ORM\ManyToMany(targetEntity: Instrument::class, inversedBy: 'teachers')]
-    private Collection $instrumentsTaught;
-
-    /**
      * @var Collection<int, Course>
      */
     #[ORM\OneToMany(targetEntity: Course::class, mappedBy: 'teacher')]
@@ -31,7 +25,6 @@ class Teacher extends User
 
     public function __construct()
     {
-        $this->instrumentsTaught = new ArrayCollection();
         $this->courses = new ArrayCollection();
         $this->setRoles(['ROLE_TEACHER']);
     }
@@ -56,30 +49,6 @@ class Teacher extends User
     public function setBiography(?string $biography): static
     {
         $this->biography = $biography;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Instrument>
-     */
-    public function getInstrumentsTaught(): Collection
-    {
-        return $this->instrumentsTaught;
-    }
-
-    public function addInstrumentsTaught(Instrument $instrumentsTaught): static
-    {
-        if (!$this->instrumentsTaught->contains($instrumentsTaught)) {
-            $this->instrumentsTaught->add($instrumentsTaught);
-        }
-
-        return $this;
-    }
-
-    public function removeInstrumentsTaught(Instrument $instrumentsTaught): static
-    {
-        $this->instrumentsTaught->removeElement($instrumentsTaught);
 
         return $this;
     }

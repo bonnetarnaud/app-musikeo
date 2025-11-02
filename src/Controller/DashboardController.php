@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Repository\CourseRepository;
+use App\Repository\LessonRepository;
+use App\Repository\EnrollmentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -41,9 +44,36 @@ class DashboardController extends AbstractController
 
     #[Route('/teacher', name: 'app_dashboard_teacher')]
     #[IsGranted('ROLE_TEACHER')]
-    public function teacher(): Response
-    {
-        return $this->render('dashboard/teacher.html.twig');
+    public function teacher(
+        CourseRepository $courseRepository, 
+        LessonRepository $lessonRepository,
+        EnrollmentRepository $enrollmentRepository
+    ): Response {
+        $teacher = $this->getUser();
+        
+        // Récupérer les cours du professeur
+        $teacherCourses = $courseRepository->findBy(['teacher' => $teacher]);
+        
+        // Récupérer les leçons à venir (7 prochains jours)
+        $upcomingLessons = $lessonRepository->findUpcomingByTeacher($teacher, 5);
+        
+        // Récupérer les leçons récentes (7 derniers jours)
+        $recentLessons = $lessonRepository->findRecentByTeacher($teacher, 5);
+        
+        // Récupérer les leçons de cette semaine
+        $weeklyLessons = $lessonRepository->findThisWeekByTeacher($teacher);
+        
+        // Compter le nombre total d'étudiants uniques
+        $totalStudents = $enrollmentRepository->countUniqueStudentsByTeacher($teacher);
+        
+        return $this->render('dashboard/teacher.html.twig', [
+            'teacherCourses' => $teacherCourses,
+            'upcomingLessons' => $upcomingLessons,
+            'recentLessons' => $recentLessons,
+            'weeklyLessons' => $weeklyLessons,
+            'totalStudents' => $totalStudents,
+            'teacherInstruments' => $teacher->getInstrumentsTaught(),
+        ]);
     }
 
     #[Route('/student', name: 'app_dashboard_student')]

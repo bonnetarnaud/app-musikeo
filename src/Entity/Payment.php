@@ -30,6 +30,10 @@ class Payment
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
+    #[ORM\ManyToOne(targetEntity: Organization::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Organization $organization = null;
+
     public const METHOD_CARD = 'carte';
     public const METHOD_CHECK = 'cheque';
     public const METHOD_TRANSFER = 'virement';
@@ -101,6 +105,18 @@ class Payment
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getOrganization(): ?Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(?Organization $organization): static
+    {
+        $this->organization = $organization;
 
         return $this;
     }

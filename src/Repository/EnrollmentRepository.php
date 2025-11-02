@@ -16,6 +16,22 @@ class EnrollmentRepository extends ServiceEntityRepository
         parent::__construct($registry, Enrollment::class);
     }
 
+    /**
+     * Count unique students for a teacher
+     */
+    public function countUniqueStudentsByTeacher($teacher): int
+    {
+        return $this->createQueryBuilder('e')
+            ->select('COUNT(DISTINCT e.student)')
+            ->join('e.course', 'c')
+            ->where('c.teacher = :teacher')
+            ->andWhere('e.status = :status')
+            ->setParameter('teacher', $teacher)
+            ->setParameter('status', Enrollment::STATUS_VALIDATED)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     //    /**
     //     * @return Enrollment[] Returns an array of Enrollment objects
     //     */

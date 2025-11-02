@@ -6,6 +6,8 @@ use App\Entity\Admin;
 use App\Entity\Student;
 use App\Entity\Teacher;
 use App\Entity\Instrument;
+use App\Entity\InstrumentRental;
+use App\Entity\Organization;
 use App\Entity\Room;
 use App\Entity\Course;
 use App\Entity\Lesson;
@@ -26,31 +28,54 @@ class AppFixtures extends Fixture
         // Clear existing data
         $this->clearData($manager);
 
-        // Create instruments
-        $instruments = $this->createInstruments($manager);
-
-        // Create rooms
-        $rooms = $this->createRooms($manager);
+        // Create demo organization first
+        $organization = $this->createDemoOrganization($manager);
+        $manager->flush(); // Ensure organization is persisted
 
         // Create users
-        $users = $this->createUsers($manager);
+        $users = $this->createUsers($manager, $organization);
 
-        // Associate instruments to users
-        $this->associateInstruments($users, $instruments);
+        // Create instruments
+        $instruments = $this->createInstruments($manager, $organization);
+
+        // Create rooms
+        $rooms = $this->createRooms($manager, $organization);
 
         // Create courses
-        $courses = $this->createCourses($manager, $users['teachers'], $instruments);
+        $courses = $this->createCourses($manager, $users['teachers'], $instruments, $organization);
 
         // Create enrollments
-        $this->createEnrollments($manager, $users['students'], $courses);
+        $this->createEnrollments($manager, $users['students'], $courses, $organization);
 
         // Create lessons
-        $this->createLessons($manager, $courses, $rooms);
+        $this->createLessons($manager, $courses, $rooms, $organization);
 
         // Create payments
-        $this->createPayments($manager, $users['students']);
+        $this->createPayments($manager, $users['students'], $organization);
 
         $manager->flush();
+    }
+
+    private function createDemoOrganization(ObjectManager $manager): Organization
+    {
+        $organization = new Organization();
+        $organization->setName('École de Musique Demo')
+                    ->setType('school')
+                    ->setEmail('admin@demo-ecole.com')
+                    ->setAddress('123 rue de la Musique, 75000 Paris')
+                    ->setPhone('01 23 45 67 89')
+                    ->setSubscriptionPlan('free')
+                    ->setMaxStudents(30)
+                    ->setMaxTeachers(3)
+                    ->setMaxAdmins(1)
+                    ->setActive(true)
+                    ->setCreatedAt(new \DateTime())
+                    ->setSlug('ecole-demo-' . uniqid());
+        
+        $manager->persist($organization);
+        $manager->flush();
+
+        return $organization;
     }
 
     private function clearData(ObjectManager $manager): void
@@ -62,44 +87,47 @@ class AppFixtures extends Fixture
         $connection->executeStatement('DELETE FROM payment');
         $connection->executeStatement('DELETE FROM lesson');
         $connection->executeStatement('DELETE FROM enrollment');
+        $connection->executeStatement('DELETE FROM instrument_rental');
         $connection->executeStatement('DELETE FROM course');
-        $connection->executeStatement('DELETE FROM student_instrument');
-        $connection->executeStatement('DELETE FROM teacher_instrument');
         $connection->executeStatement('DELETE FROM student');
         $connection->executeStatement('DELETE FROM teacher');
         $connection->executeStatement('DELETE FROM admin');
         $connection->executeStatement('DELETE FROM room');
         $connection->executeStatement('DELETE FROM instrument');
+        $connection->executeStatement('DELETE FROM organization');
         $connection->executeStatement('SET FOREIGN_KEY_CHECKS = 1');
     }
 
-    private function createInstruments(ObjectManager $manager): array
+    private function createInstruments(ObjectManager $manager, Organization $organization): array
     {
         $instrumentsData = [
-            ['Piano', 'clavier', 'Instrument à clavier avec cordes frappées'],
-            ['Guitare', 'cordes', 'Instrument à cordes pincées'],
-            ['Guitare électrique', 'cordes', 'Guitare amplifiée électroniquement'],
-            ['Basse', 'cordes', 'Instrument à cordes graves'],
-            ['Violon', 'cordes', 'Instrument à cordes frottées'],
-            ['Alto', 'cordes', 'Instrument à cordes, plus grave que le violon'],
-            ['Violoncelle', 'cordes', 'Instrument à cordes de la famille des violons'],
-            ['Flûte traversière', 'vents', 'Instrument à vent en bois'],
-            ['Clarinette', 'vents', 'Instrument à vent en bois à anche'],
-            ['Saxophone', 'vents', 'Instrument à vent en cuivre'],
-            ['Trompette', 'vents', 'Instrument à vent en cuivre'],
-            ['Trombone', 'vents', 'Instrument à vent en cuivre à coulisse'],
-            ['Batterie', 'percussions', 'Ensemble d\'instruments de percussion'],
-            ['Djembé', 'percussions', 'Tambour d\'origine africaine'],
-            ['Chant', 'vocal', 'Technique vocale et interprétation'],
-            ['Ukulélé', 'cordes', 'Petite guitare hawaïenne'],
+            ['Piano Yamaha P-125', 'clavier', 'Piano numérique portable', 'Yamaha', 'P-125', 'SN001234', true, 'excellent'],
+            ['Piano Kawai ES110', 'clavier', 'Piano numérique portable', 'Kawai', 'ES110', 'SN001235', true, 'good'],
+            ['Guitare Classique', 'cordes', 'Guitare classique taille 4/4', 'Yamaha', 'C40', 'SN002001', true, 'good'],
+            ['Guitare Classique Junior', 'cordes', 'Guitare classique taille 3/4', 'Yamaha', 'CS40', 'SN002002', true, 'excellent'],
+            ['Guitare Électrique', 'cordes', 'Guitare électrique', 'Fender', 'Stratocaster', 'SN002100', false, 'excellent'],
+            ['Violon 4/4', 'cordes', 'Violon taille adulte', 'Stentor', 'Student I', 'SN003001', true, 'good'],
+            ['Violon 3/4', 'cordes', 'Violon taille enfant', 'Stentor', 'Student I', 'SN003002', true, 'fair'],
+            ['Flûte traversière', 'vents', 'Flûte en métal argenté', 'Pearl', 'PF500', 'SN004001', true, 'excellent'],
+            ['Clarinette Sib', 'vents', 'Clarinette en ébène', 'Buffet Crampon', 'E11', 'SN004101', true, 'good'],
+            ['Trompette Sib', 'vents', 'Trompette en laiton', 'Bach', 'TR300H2', 'SN004201', true, 'excellent'],
+            ['Batterie complète', 'percussions', 'Kit de batterie 5 fûts', 'Pearl', 'Roadshow', 'SN005001', false, 'good'],
+            ['Djembé', 'percussions', 'Tambour traditionnel', 'Remo', 'DJ-0012-05', 'SN005101', true, 'excellent'],
         ];
 
         $instruments = [];
-        foreach ($instrumentsData as [$name, $type, $description]) {
+        foreach ($instrumentsData as [$name, $type, $description, $brand, $model, $serialNumber, $isRentable, $condition]) {
             $instrument = new Instrument();
             $instrument->setName($name)
                       ->setType($type)
-                      ->setDescription($description);
+                      ->setDescription($description)
+                      ->setBrand($brand)
+                      ->setModel($model)
+                      ->setSerialNumber($serialNumber)
+                      ->setIsRentable($isRentable)
+                      ->setIsCurrentlyRented(false)
+                      ->setCondition($condition)
+                      ->setOrganization($organization);
             
             $manager->persist($instrument);
             $instruments[$name] = $instrument;
@@ -108,7 +136,7 @@ class AppFixtures extends Fixture
         return $instruments;
     }
 
-    private function createRooms(ObjectManager $manager): array
+    private function createRooms(ObjectManager $manager, Organization $organization): array
     {
         $roomsData = [
             ['Salle Piano 1', 15, 'Rez-de-chaussée, à gauche'],
@@ -130,7 +158,8 @@ class AppFixtures extends Fixture
             $room = new Room();
             $room->setName($name)
                  ->setCapacity($capacity)
-                 ->setLocation($location);
+                 ->setLocation($location)
+                 ->setOrganization($organization);
             
             $manager->persist($room);
             $rooms[$name] = $room;
@@ -139,13 +168,14 @@ class AppFixtures extends Fixture
         return $rooms;
     }
 
-    private function createUsers(ObjectManager $manager): array
+    private function createUsers(ObjectManager $manager, Organization $organization): array
     {
         // Admin
         $admin = new Admin();
         $admin->setEmail('admin@musikeo.com')
               ->setFirstname('Jean')
               ->setLastname('Administrateur')
+              ->setOrganization($organization)
               ->setPassword($this->passwordHasher->hashPassword($admin, 'password'));
         $manager->persist($admin);
 
@@ -168,6 +198,7 @@ class AppFixtures extends Fixture
                     ->setLastname($lastname)
                     ->setPhone($phone)
                     ->setBiography($bio)
+                    ->setOrganization($organization)
                     ->setPassword($this->passwordHasher->hashPassword($teacher, 'password'));
             
             $manager->persist($teacher);
@@ -198,6 +229,7 @@ class AppFixtures extends Fixture
                     ->setDateOfBirth(new \DateTime($birthDate))
                     ->setAddress($address)
                     ->setPhone($phone)
+                    ->setOrganization($organization)
                     ->setPassword($this->passwordHasher->hashPassword($student, 'password'));
             
             $manager->persist($student);
@@ -211,67 +243,33 @@ class AppFixtures extends Fixture
         ];
     }
 
-    private function associateInstruments(array $users, array $instruments): void
-    {
-        // Teachers - instruments taught
-        $users['teachers'][0]->addInstrumentsTaught($instruments['Piano']);
-        $users['teachers'][0]->addInstrumentsTaught($instruments['Chant']);
-        
-        $users['teachers'][1]->addInstrumentsTaught($instruments['Guitare']);
-        $users['teachers'][1]->addInstrumentsTaught($instruments['Guitare électrique']);
-        $users['teachers'][1]->addInstrumentsTaught($instruments['Ukulélé']);
-        
-        $users['teachers'][2]->addInstrumentsTaught($instruments['Violon']);
-        $users['teachers'][2]->addInstrumentsTaught($instruments['Alto']);
-        
-        $users['teachers'][3]->addInstrumentsTaught($instruments['Flûte traversière']);
-        $users['teachers'][3]->addInstrumentsTaught($instruments['Clarinette']);
-        
-        $users['teachers'][4]->addInstrumentsTaught($instruments['Batterie']);
-        $users['teachers'][4]->addInstrumentsTaught($instruments['Djembé']);
-        
-        $users['teachers'][5]->addInstrumentsTaught($instruments['Chant']);
-
-        // Students - instruments learned
-        $instrumentsList = array_values($instruments);
-        foreach ($users['students'] as $index => $student) {
-            // Each student learns 1-3 instruments
-            $numInstruments = rand(1, 3);
-            $studentInstruments = array_rand($instrumentsList, $numInstruments);
-            
-            if (is_array($studentInstruments)) {
-                foreach ($studentInstruments as $instrumentIndex) {
-                    $student->addInstrument($instrumentsList[$instrumentIndex]);
-                }
-            } else {
-                $student->addInstrument($instrumentsList[$studentInstruments]);
-            }
-        }
-    }
-
-    private function createCourses(ObjectManager $manager, array $teachers, array $instruments): array
+    private function createCourses(ObjectManager $manager, array $teachers, array $instruments, Organization $organization): array
     {
         $coursesData = [
-            ['Piano Débutant', 'Piano', 0],
-            ['Piano Intermédiaire', 'Piano', 0],
-            ['Guitare Débutant', 'Guitare', 1],
-            ['Guitare Électrique', 'Guitare électrique', 1],
-            ['Violon Débutant', 'Violon', 2],
-            ['Violon Avancé', 'Violon', 2],
-            ['Flûte Débutant', 'Flûte traversière', 3],
-            ['Batterie Rock', 'Batterie', 4],
-            ['Chant Lyrique', 'Chant', 5],
-            ['Chant Moderne', 'Chant', 5],
-            ['Ukulélé Débutant', 'Ukulélé', 1],
-            ['Ensemble de Cordes', 'Violon', 2],
+            ['Piano Débutant', 'Apprentissage des bases du piano pour débutants', 0],
+            ['Piano Intermédiaire', 'Perfectionnement technique et répertoire varié', 0],
+            ['Guitare Classique Débutant', 'Initiation à la guitare classique', 1],
+            ['Guitare Électrique Rock', 'Apprentissage du rock à la guitare électrique', 1],
+            ['Violon Débutant', 'Découverte du violon et technique de base', 2],
+            ['Violon Avancé', 'Perfectionnement et répertoire complexe', 2],
+            ['Flûte Traversière', 'Technique de souffle et doigtés', 3],
+            ['Batterie Rock/Pop', 'Rythmes modernes et coordination', 4],
+            ['Chant Lyrique', 'Technique vocale classique', 5],
+            ['Chant Moderne', 'Interprétation de variété et jazz', 5],
+            ['Éveil Musical 3-6 ans', 'Découverte ludique de la musique pour petits', 1],
+            ['Solfège Débutant', 'Lecture de notes et théorie musicale', 2],
+            ['Ensemble de Cordes', 'Pratique collective pour instruments à cordes', 2],
+            ['Atelier Jazz', 'Improvisation et standards jazz', 5],
+            ['Formation Musicale', 'Dictées, rythmes et analyse', 3],
         ];
 
         $courses = [];
-        foreach ($coursesData as [$name, $instrumentName, $teacherIndex]) {
+        foreach ($coursesData as [$name, $description, $teacherIndex]) {
             $course = new Course();
             $course->setName($name)
-                   ->setInstrument($instruments[$instrumentName])
-                   ->setTeacher($teachers[$teacherIndex]);
+                   ->setDescription($description)
+                   ->setTeacher($teachers[$teacherIndex])
+                   ->setOrganization($organization);
             
             $manager->persist($course);
             $courses[] = $course;
@@ -280,7 +278,7 @@ class AppFixtures extends Fixture
         return $courses;
     }
 
-    private function createEnrollments(ObjectManager $manager, array $students, array $courses): void
+    private function createEnrollments(ObjectManager $manager, array $students, array $courses, Organization $organization): void
     {
         $statuses = [Enrollment::STATUS_PENDING, Enrollment::STATUS_VALIDATED, Enrollment::STATUS_CANCELLED];
         
@@ -290,13 +288,14 @@ class AppFixtures extends Fixture
             $enrollment->setStudent($students[array_rand($students)])
                       ->setCourse($courses[array_rand($courses)])
                       ->setDateEnrolled(new \DateTime('-' . rand(1, 90) . ' days'))
-                      ->setStatus($statuses[array_rand($statuses)]);
+                      ->setStatus($statuses[array_rand($statuses)])
+                      ->setOrganization($organization);
             
             $manager->persist($enrollment);
         }
     }
 
-    private function createLessons(ObjectManager $manager, array $courses, array $rooms): void
+    private function createLessons(ObjectManager $manager, array $courses, array $rooms, Organization $organization): void
     {
         $roomsArray = array_values($rooms);
         
@@ -316,7 +315,8 @@ class AppFixtures extends Fixture
                         $lesson->setCourse($course)
                               ->setStartDatetime($startDate)
                               ->setEndDatetime($endDate)
-                              ->setRoom($roomsArray[array_rand($roomsArray)]);
+                              ->setRoom($roomsArray[array_rand($roomsArray)])
+                              ->setOrganization($organization);
                         
                         $manager->persist($lesson);
                     }
@@ -325,7 +325,7 @@ class AppFixtures extends Fixture
         }
     }
 
-    private function createPayments(ObjectManager $manager, array $students): void
+    private function createPayments(ObjectManager $manager, array $students, Organization $organization): void
     {
         $methods = [Payment::METHOD_CARD, Payment::METHOD_CHECK, Payment::METHOD_TRANSFER, Payment::METHOD_CASH];
         $amounts = ['50.00', '75.00', '100.00', '120.00', '150.00', '200.00'];
@@ -341,7 +341,8 @@ class AppFixtures extends Fixture
                     ->setAmount($amounts[array_rand($amounts)])
                     ->setDate(new \DateTime('-' . rand(1, 180) . ' days'))
                     ->setMethod($methods[array_rand($methods)])
-                    ->setDescription($descriptions[array_rand($descriptions)]);
+                    ->setDescription($descriptions[array_rand($descriptions)])
+                    ->setOrganization($organization);
             
             $manager->persist($payment);
         }

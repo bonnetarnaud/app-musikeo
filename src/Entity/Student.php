@@ -21,12 +21,6 @@ class Student extends User
     private ?string $phone = null;
 
     /**
-     * @var Collection<int, Instrument>
-     */
-    #[ORM\ManyToMany(targetEntity: Instrument::class, inversedBy: 'students')]
-    private Collection $instruments;
-
-    /**
      * @var Collection<int, Enrollment>
      */
     #[ORM\OneToMany(targetEntity: Enrollment::class, mappedBy: 'student', orphanRemoval: true)]
@@ -38,11 +32,17 @@ class Student extends User
     #[ORM\OneToMany(targetEntity: Payment::class, mappedBy: 'student', orphanRemoval: true)]
     private Collection $payments;
 
+    /**
+     * @var Collection<int, InstrumentRental>
+     */
+    #[ORM\OneToMany(targetEntity: InstrumentRental::class, mappedBy: 'student')]
+    private Collection $instrumentRentals;
+
     public function __construct()
     {
-        $this->instruments = new ArrayCollection();
         $this->enrollments = new ArrayCollection();
         $this->payments = new ArrayCollection();
+        $this->instrumentRentals = new ArrayCollection();
         $this->setRoles(['ROLE_STUDENT']);
     }
 
@@ -83,25 +83,31 @@ class Student extends User
     }
 
     /**
-     * @return Collection<int, Instrument>
+     * @return Collection<int, InstrumentRental>
      */
-    public function getInstruments(): Collection
+    public function getInstrumentRentals(): Collection
     {
-        return $this->instruments;
+        return $this->instrumentRentals;
     }
 
-    public function addInstrument(Instrument $instrument): static
+    public function addInstrumentRental(InstrumentRental $instrumentRental): static
     {
-        if (!$this->instruments->contains($instrument)) {
-            $this->instruments->add($instrument);
+        if (!$this->instrumentRentals->contains($instrumentRental)) {
+            $this->instrumentRentals->add($instrumentRental);
+            $instrumentRental->setStudent($this);
         }
 
         return $this;
     }
 
-    public function removeInstrument(Instrument $instrument): static
+    public function removeInstrumentRental(InstrumentRental $instrumentRental): static
     {
-        $this->instruments->removeElement($instrument);
+        if ($this->instrumentRentals->removeElement($instrumentRental)) {
+            // set the owning side to null (unless already changed)
+            if ($instrumentRental->getStudent() === $this) {
+                $instrumentRental->setStudent(null);
+            }
+        }
 
         return $this;
     }
