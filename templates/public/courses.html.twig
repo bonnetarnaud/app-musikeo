@@ -1,0 +1,226 @@
+{% extends 'public/layout.html.twig' %}
+
+{% block title %}Nos cours - {{ organization.name }}{% endblock %}
+
+{% block main_content %}
+<!-- Header -->
+<div class="bg-blue-600 text-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">
+                Nos cours de musique
+            </h1>
+            <p class="text-xl max-w-2xl mx-auto">
+                Découvrez notre offre complète de formation musicale adaptée à tous les niveaux
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Courses Section -->
+<div class="py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Courses Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            {% set courses = [
+                {
+                    name: 'Piano',
+                    icon: '🎹',
+                    description: 'Apprenez le piano classique ou moderne avec nos méthodes adaptées à votre niveau.',
+                    levels: ['Débutant', 'Intermédiaire', 'Avancé'],
+                    duration: '30min - 1h',
+                    type: 'Individuel ou collectif'
+                },
+                {
+                    name: 'Guitare',
+                    icon: '🎸',
+                    description: 'Guitare classique, folk ou électrique. Découvrez l\'instrument le plus populaire !',
+                    levels: ['Débutant', 'Intermédiaire', 'Avancé'],
+                    duration: '30min - 1h',
+                    type: 'Individuel ou collectif'
+                },
+                {
+                    name: 'Violon',
+                    icon: '🎻',
+                    description: 'Initiez-vous au violon avec une pédagogie progressive et bienveillante.',
+                    levels: ['Débutant', 'Intermédiaire', 'Avancé'],
+                    duration: '30min - 1h',
+                    type: 'Individuel'
+                },
+                {
+                    name: 'Batterie',
+                    icon: '🥁',
+                    description: 'Développez votre sens du rythme et votre coordination sur notre kit professionnel.',
+                    levels: ['Débutant', 'Intermédiaire', 'Avancé'],
+                    duration: '30min - 1h',
+                    type: 'Individuel'
+                },
+                {
+                    name: 'Chant',
+                    icon: '🎤',
+                    description: 'Travaillez votre voix, votre respiration et votre interprétation.',
+                    levels: ['Débutant', 'Intermédiaire', 'Avancé'],
+                    duration: '30min - 1h',
+                    type: 'Individuel ou collectif'
+                },
+                {
+                    name: 'Flûte traversière',
+                    icon: '🪈',
+                    description: 'Découvrez la beauté de la flûte traversière et développez votre souffle.',
+                    levels: ['Débutant', 'Intermédiaire', 'Avancé'],
+                    duration: '30min - 1h',
+                    type: 'Individuel'
+                }
+            ] %}
+
+            {% for course in courses %}
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
+                <div class="p-6">
+                    <div class="text-center">
+                        <div class="text-5xl mb-4">{{ course.icon }}</div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-3">{{ course.name }}</h3>
+                        <p class="text-gray-600 mb-4">{{ course.description }}</p>
+                    </div>
+                    
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="font-medium">Durée :</span>
+                            <span class="text-gray-600">{{ course.duration }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="font-medium">Format :</span>
+                            <span class="text-gray-600">{{ course.type }}</span>
+                        </div>
+                        <div class="flex justify-between items-start">
+                            <span class="font-medium">Niveaux :</span>
+                            <div class="text-right">
+                                {% for level in course.levels %}
+                                    <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full mr-1 mb-1">
+                                        {{ level }}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="px-6 py-4 bg-gray-50">
+                    <a href="{{ path('public_organization_registration', {slug: organization.slug}) }}" 
+                       class="w-full bg-blue-600 hover:bg-blue-700 text-white text-center py-2 px-4 rounded-md transition duration-200 block">
+                        S'inscrire
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Course Types -->
+        <div class="bg-gray-50 rounded-lg p-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">
+                Nos formules de cours
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Individual Lessons -->
+                <div class="text-center">
+                    <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="text-2xl">👤</span>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4">Cours individuels</h3>
+                    <p class="text-gray-600 mb-4">
+                        Un apprentissage personnalisé avec un suivi sur mesure pour progresser à votre rythme.
+                    </p>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                        <li>• Cours de 30min, 45min ou 1h</li>
+                        <li>• Programme adapté à vos objectifs</li>
+                        <li>• Horaires flexibles</li>
+                    </ul>
+                </div>
+
+                <!-- Group Lessons -->
+                <div class="text-center">
+                    <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="text-2xl">👥</span>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4">Cours collectifs</h3>
+                    <p class="text-gray-600 mb-4">
+                        Apprenez en groupe dans une ambiance conviviale et stimulante.
+                    </p>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                        <li>• Groupes de 3 à 6 élèves</li>
+                        <li>• Niveaux homogènes</li>
+                        <li>• Tarifs avantageux</li>
+                    </ul>
+                </div>
+
+                <!-- Workshops -->
+                <div class="text-center">
+                    <div class="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="text-2xl">🎪</span>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4">Ateliers & Stages</h3>
+                    <p class="text-gray-600 mb-4">
+                        Participez à nos ateliers thématiques et stages intensifs pendant les vacances.
+                    </p>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                        <li>• Ateliers jazz, rock, classique</li>
+                        <li>• Stages de perfectionnement</li>
+                        <li>• Concerts et auditions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Age Groups -->
+        <div class="mt-16">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">
+                Cours adaptés à tous les âges
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <div class="text-4xl mb-4">👶</div>
+                    <h3 class="font-semibold mb-2">Éveil musical</h3>
+                    <p class="text-sm text-gray-600">3-5 ans</p>
+                    <p class="text-xs text-gray-500 mt-2">Découverte ludique de la musique</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <div class="text-4xl mb-4">🧒</div>
+                    <h3 class="font-semibold mb-2">Enfants</h3>
+                    <p class="text-sm text-gray-600">6-12 ans</p>
+                    <p class="text-xs text-gray-500 mt-2">Apprentissage progressif et amusant</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <div class="text-4xl mb-4">🧑‍🎓</div>
+                    <h3 class="font-semibold mb-2">Adolescents</h3>
+                    <p class="text-sm text-gray-600">13-17 ans</p>
+                    <p class="text-xs text-gray-500 mt-2">Musiques actuelles et classiques</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <div class="text-4xl mb-4">👩‍💼</div>
+                    <h3 class="font-semibold mb-2">Adultes</h3>
+                    <p class="text-sm text-gray-600">18+ ans</p>
+                    <p class="text-xs text-gray-500 mt-2">Jamais trop tard pour commencer !</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="mt-16 text-center">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">
+                Prêt à commencer ?
+            </h2>
+            <p class="text-gray-600 mb-8 max-w-2xl mx-auto">
+                Rejoignez-nous pour découvrir le plaisir de faire de la musique dans un environnement bienveillant et professionnel.
+            </p>
+            <a href="{{ path('public_organization_registration', {slug: organization.slug}) }}" 
+               class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition duration-200">
+                Demander une préinscription
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

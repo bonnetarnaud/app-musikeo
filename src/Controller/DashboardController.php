@@ -5,12 +5,12 @@ namespace App\Controller;
 use App\Repository\CourseRepository;
 use App\Repository\LessonRepository;
 use App\Repository\EnrollmentRepository;
+use App\Repository\PreRegistrationRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/dashboard')]
 #[IsGranted('ROLE_USER')]
 class DashboardController extends AbstractController
 {
@@ -37,9 +37,20 @@ class DashboardController extends AbstractController
 
     #[Route('/admin', name: 'app_dashboard_admin')]
     #[IsGranted('ROLE_ADMIN')]
-    public function admin(): Response
+    public function admin(PreRegistrationRepository $preRegistrationRepository): Response
     {
-        return $this->render('dashboard/admin.html.twig');
+        $organization = $this->getUser()->getOrganization();
+        
+        // Statistiques des préinscriptions
+        $totalPreRegistrations = $preRegistrationRepository->countByOrganization($organization);
+        $pendingPreRegistrations = $preRegistrationRepository->countByOrganizationAndStatus($organization, 'pending');
+        $recentPreRegistrations = $preRegistrationRepository->findRecentByOrganization($organization, 5);
+        
+        return $this->render('dashboard/admin.html.twig', [
+            'totalPreRegistrations' => $totalPreRegistrations,
+            'pendingPreRegistrations' => $pendingPreRegistrations,
+            'recentPreRegistrations' => $recentPreRegistrations,
+        ]);
     }
 
     #[Route('/teacher', name: 'app_dashboard_teacher')]
@@ -72,7 +83,6 @@ class DashboardController extends AbstractController
             'recentLessons' => $recentLessons,
             'weeklyLessons' => $weeklyLessons,
             'totalStudents' => $totalStudents,
-            'teacherInstruments' => $teacher->getInstrumentsTaught(),
         ]);
     }
 

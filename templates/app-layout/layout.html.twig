@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Musikeo Dashboard{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>🎵</text></svg>">
+    
+    {% block javascripts %}
+        {% block importmap %}{{ importmap('app') }}{% endblock %}
+    {% endblock %}
+</head>
+<body class="">
+    <!-- Flash Messages -->
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="fixed top-4 right-4 z-50 max-w-md">
+                {% set alert_classes = {
+                    'success': 'bg-green-500 text-white',
+                    'error': 'bg-red-500 text-white',
+                    'warning': 'bg-yellow-500 text-white',
+                    'info': 'bg-blue-500 text-white'
+                } %}
+                <div class="alert alert-{{ label }} {{ alert_classes[label]|default('bg-gray-500 text-white') }} px-6 py-4 rounded-lg shadow-lg">
+                    <div class="flex items-center">
+                        {% if label == 'success' %}
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        {% elseif label == 'error' %}
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        {% endif %}
+                        <span>{{ message }}</span>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gray-900 text-white flex flex-col">           
+            <!-- Header avec logo -->
+            <div class="p-6">
+                <p class="text-xs text-gray-400 mt-1">{{ app.user.organization.name }}</p>
+            </div>
+
+            <!-- Navigation Menu -->
+            <nav class="flex-1 py-6">
+                {% block sidebar_menu %}
+                <!-- Menu automatique selon le rôle -->
+                {% if 'ROLE_ADMIN' in app.user.roles %}
+                    {% include 'app-layout/_sidebar-admin.html.twig' %}
+                {% elseif 'ROLE_TEACHER' in app.user.roles %}
+                    {% include 'app-layout/_sidebar-teacher.html.twig' %}
+                {% elseif 'ROLE_STUDENT' in app.user.roles %}
+                    {% include 'app-layout/_sidebar-student.html.twig' %}
+                {% else %}
+                    <!-- Menu par défaut -->
+                    <div class="space-y-2">
+                        <a href="/" class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                            </svg>
+                            Dashboard
+                        </a>
+                    </div>
+                {% endif %}
+                {% endblock %}
+            </nav>
+
+            <!-- User Info & Logout -->
+            <div class="p-6 border-t border-gray-800">
+                <div class="flex items-center mb-4">
+                    <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center mr-3">
+                        <span class="text-sm font-medium">{{ app.user.firstname|first }}{{ app.user.lastname|first }}</span>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium">{{ app.user.firstname }} {{ app.user.lastname }}</p>
+                        <p class="text-xs text-gray-400">{{ app.user.organization.name }}</p>
+                    </div>
+                </div>
+                <a href="{{ path('app_logout') }}" class="flex items-center w-full px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition-colors">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                    Déconnexion
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-auto">
+            <div class="p-8">
+                {% block main_content %}
+                <!-- Contenu principal - sera remplacé dans les templates enfants -->
+                <h1>Contenu principal</h1>
+                {% endblock %}
+            </div>
+        </main>
+    </div>
+</body>
+</html>

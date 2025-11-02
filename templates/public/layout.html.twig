@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ organization.name }}{% endblock %}</title>
+    {% block stylesheets %}
+        {{ importmap('app') }}
+    {% endblock %}
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>🎵</text></svg>">
+</head>
+<body class="font-sans antialiased">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <!-- Logo -->
+                    <div class="flex-shrink-0">
+                        <a href="{{ path('public_organization_home', {slug: organization.slug}) }}" class="flex items-center">
+                            <div class="text-2xl">🎵</div>
+                            <span class="ml-2 text-xl font-bold text-gray-900">{{ organization.name }}</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="hidden md:flex md:items-center md:space-x-8">
+                    <a href="{{ path('public_organization_home', {slug: organization.slug}) }}" 
+                       class="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
+                        Accueil
+                    </a>
+                    <a href="{{ path('public_organization_courses', {slug: organization.slug}) }}" 
+                       class="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
+                        Nos Cours
+                    </a>
+                    <a href="{{ path('public_organization_contact', {slug: organization.slug}) }}" 
+                       class="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
+                        Contact
+                    </a>
+                    <a href="{{ path('public_organization_registration', {slug: organization.slug}) }}" 
+                       class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium">
+                        S'inscrire
+                    </a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button type="button" class="text-gray-900 hover:text-blue-600 focus:outline-none focus:text-blue-600" id="mobile-menu-button">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div class="md:hidden hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-50">
+                <a href="{{ path('public_organization_home', {slug: organization.slug}) }}" 
+                   class="text-gray-900 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">
+                    Accueil
+                </a>
+                <a href="{{ path('public_organization_courses', {slug: organization.slug}) }}" 
+                   class="text-gray-900 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">
+                    Nos Cours
+                </a>
+                <a href="{{ path('public_organization_contact', {slug: organization.slug}) }}" 
+                   class="text-gray-900 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">
+                    Contact
+                </a>
+                <a href="{{ path('public_organization_registration', {slug: organization.slug}) }}" 
+                   class="bg-blue-600 hover:bg-blue-700 text-white block px-3 py-2 rounded-md text-base font-medium">
+                    S'inscrire
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="bg-{{ type == 'success' ? 'green' : type == 'error' ? 'red' : 'blue' }}-100 border border-{{ type == 'success' ? 'green' : type == 'error' ? 'red' : 'blue' }}-400 text-{{ type == 'success' ? 'green' : type == 'error' ? 'red' : 'blue' }}-700 px-4 py-3 rounded mb-4 mx-4 mt-4">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <!-- Main Content -->
+    <main>
+        {% block main_content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Organization Info -->
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center mb-4">
+                        <div class="text-2xl">🎵</div>
+                        <span class="ml-2 text-xl font-bold">{{ organization.name }}</span>
+                    </div>
+                    <p class="text-gray-300 mb-4">{{ organization.type|replace({'school': 'École de musique', 'conservatory': 'Conservatoire', 'private': 'École privée'}) }}</p>
+                    {% if organization.address %}
+                        <p class="text-gray-300 mb-2">📍 {{ organization.address }}</p>
+                    {% endif %}
+                    {% if organization.phone %}
+                        <p class="text-gray-300 mb-2">📞 {{ organization.phone }}</p>
+                    {% endif %}
+                    <p class="text-gray-300">✉️ {{ organization.email }}</p>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Navigation</h3>
+                    <ul class="space-y-2">
+                        <li><a href="{{ path('public_organization_home', {slug: organization.slug}) }}" class="text-gray-300 hover:text-white">Accueil</a></li>
+                        <li><a href="{{ path('public_organization_courses', {slug: organization.slug}) }}" class="text-gray-300 hover:text-white">Nos Cours</a></li>
+                        <li><a href="{{ path('public_organization_contact', {slug: organization.slug}) }}" class="text-gray-300 hover:text-white">Contact</a></li>
+                        <li><a href="{{ path('public_organization_registration', {slug: organization.slug}) }}" class="text-gray-300 hover:text-white">S'inscrire</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Contact</h3>
+                    <div class="space-y-2">
+                        <a href="mailto:{{ organization.email }}" class="text-gray-300 hover:text-white block">
+                            Nous contacter
+                        </a>
+                        {% if organization.website %}
+                            <a href="{{ organization.website }}" class="text-gray-300 hover:text-white block" target="_blank">
+                                Site web
+                            </a>
+                        {% endif %}
+                        <a href="{{ path('app_login') }}" class="text-gray-300 hover:text-white block">
+                            Espace élève/professeur
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 pt-8 border-t border-gray-700">
+                <p class="text-center text-gray-400">
+                    © {{ 'now'|date('Y') }} {{ organization.name }}. Tous droits réservés.
+                    <span class="ml-4">Propulsé par <a href="#" class="text-blue-400 hover:text-blue-300">Musikeo</a></span>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    {% block javascripts %}
+        <script>
+            // Mobile menu toggle
+            document.getElementById('mobile-menu-button').addEventListener('click', function() {
+                const menu = document.getElementById('mobile-menu');
+                menu.classList.toggle('hidden');
+            });
+        </script>
+    {% endblock %}
+</body>
+</html>

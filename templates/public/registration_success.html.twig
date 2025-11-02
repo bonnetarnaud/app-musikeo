@@ -1,0 +1,88 @@
+{% extends 'public/layout.html.twig' %}
+
+{% block title %}Préinscription envoyée - {{ organization.name }}{% endblock %}
+
+{% block main_content %}
+<div class="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+        <div class="text-center">
+            <!-- Success Icon -->
+            <div class="mx-auto h-16 w-16 bg-green-100 rounded-full flex items-center justify-center mb-6">
+                <svg class="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">
+                Merci pour votre préinscription !
+            </h1>
+            
+            <div class="bg-white shadow rounded-lg p-6 mb-8">
+                <p class="text-gray-600 mb-4">
+                    Votre demande de préinscription à <strong>{{ organization.name }}</strong> a été envoyée avec succès.
+                </p>
+                
+                <div class="border-l-4 border-blue-500 bg-blue-50 p-4 mb-4">
+                    <div class="flex">
+                        <div class="ml-3">
+                            <p class="text-sm text-blue-700">
+                                <strong>Prochaines étapes :</strong><br>
+                                • Nous examinerons votre demande<br>
+                                • Vous serez contacté(e) sous 48h<br>
+                                • Un entretien sera planifié si nécessaire
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <p class="text-sm text-gray-500">
+                    Si vous n'avez pas de nouvelles de notre part dans les 48 heures, 
+                    n'hésitez pas à nous contacter directement.
+                </p>
+            </div>
+            
+            <!-- Contact Information -->
+            <div class="bg-white shadow rounded-lg p-6 mb-8">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Nous contacter</h3>
+                <div class="space-y-3">
+                    {% if organization.phone %}
+                    <div class="flex items-center justify-center">
+                        <span class="text-gray-500 mr-2">📞</span>
+                        <a href="tel:{{ organization.phone }}" class="text-blue-600 hover:text-blue-800">
+                            {{ organization.phone }}
+                        </a>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="flex items-center justify-center">
+                        <span class="text-gray-500 mr-2">✉️</span>
+                        <a href="mailto:{{ organization.email }}" class="text-blue-600 hover:text-blue-800">
+                            {{ organization.email }}
+                        </a>
+                    </div>
+                    
+                    {% if organization.address %}
+                    <div class="flex items-center justify-center">
+                        <span class="text-gray-500 mr-2">📍</span>
+                        <span class="text-gray-700">{{ organization.address }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="space-y-4">
+                <a href="{{ path('public_organization_home', {slug: organization.slug}) }}" 
+                   class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 block text-center">
+                    Retour à l'accueil
+                </a>
+                
+                <a href="{{ path('public_organization_courses', {slug: organization.slug}) }}" 
+                   class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-lg transition duration-200 block text-center">
+                    Découvrir nos cours
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -285,6 +285,58 @@ class Instrument
         ];
     }
 
+    public function rentTo(Student $student, \DateTime $startDate, float $monthlyPrice = null, string $notes = null): InstrumentRental
+    {
+        if (!$this->isAvailableForRent()) {
+            throw new \InvalidArgumentException('Cet instrument n\'est pas disponible à la location.');
+        }
+
+        $rental = new InstrumentRental();
+        $rental->setStudent($student)
+               ->setInstrument($this)
+               ->setStartDate($startDate)
+               ->setMonthlyPrice($monthlyPrice ?: 0)
+               ->setStatus('active')
+               ->setNotes($notes)
+               ->setOrganization($this->organization);
+
+        $this->setIsCurrentlyRented(true)
+             ->setCurrentRenter($student)
+             ->setRentalStartDate($startDate);
+
+        return $rental;
+    }
+
+    public function getCurrentRental(): ?InstrumentRental
+    {
+        // Pour l'instant, on retourne null car nous n'avons pas de relation directe
+        // Dans une version plus avancée, on pourrait ajouter une relation OneToMany avec InstrumentRental
+        return null;
+    }
+
+    public function isAvailableForRent(): bool
+    {
+        return $this->isRentable && !$this->isCurrentlyRented;
+    }
+
+    public function returnFromRent(): void
+    {
+        if (!$this->isCurrentlyRented) {
+            throw new \InvalidArgumentException('Cet instrument n\'est pas actuellement loué.');
+        }
+
+        // Marquer la location actuelle comme terminée
+        $currentRental = $this->getCurrentRental();
+        if ($currentRental) {
+            $currentRental->setEndDate(new \DateTime())
+                         ->setStatus('returned');
+        }
+
+        $this->setIsCurrentlyRented(false)
+             ->setCurrentRenter(null)
+             ->setRentalStartDate(null);
+    }
+
     public function __toString(): string
     {
         $name = $this->name ?? '';

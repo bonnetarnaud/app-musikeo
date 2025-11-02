@@ -1,0 +1,186 @@
+{% extends 'public/layout.html.twig' %}
+
+{% block title %}Préinscription - {{ organization.name }}{% endblock %}
+
+{% block main_content %}
+<!-- Header -->
+<div class="bg-blue-600 text-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">
+                Préinscription
+            </h1>
+            <p class="text-xl max-w-2xl mx-auto">
+                Rejoignez {{ organization.name }} et commencez votre parcours musical
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Form Section -->
+<div class="py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+            <div class="px-6 py-8 sm:px-10">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-2">Demande de préinscription</h2>
+                    <p class="text-gray-600">
+                        Remplissez ce formulaire pour nous faire part de votre intérêt. 
+                        Nous vous recontacterons rapidement pour finaliser votre inscription et organiser un premier rendez-vous.
+                    </p>
+                </div>
+
+                {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Informations personnelles -->
+                    <div class="md:col-span-2">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
+                            Informations personnelles
+                        </h3>
+                    </div>
+                    
+                    <div>
+                        {{ form_label(form.firstname, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
+                        {{ form_widget(form.firstname) }}
+                        {{ form_errors(form.firstname) }}
+                    </div>
+                    
+                    <div>
+                        {{ form_label(form.lastname, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
+                        {{ form_widget(form.lastname) }}
+                        {{ form_errors(form.lastname) }}
+                    </div>
+                    
+                    <div>
+                        {{ form_label(form.email, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
+                        {{ form_widget(form.email) }}
+                        {{ form_errors(form.email) }}
+                    </div>
+                    
+                    <div>
+                        {{ form_label(form.phone, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
+                        {{ form_widget(form.phone) }}
+                        {{ form_errors(form.phone) }}
+                    </div>
+                    
+                    <div>
+                        {{ form_label(form.dateOfBirth, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
+                        {{ form_widget(form.dateOfBirth) }}
+                        {{ form_errors(form.dateOfBirth) }}
+                    </div>
+                    
+                    <div>
+                        {{ form_label(form.address, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
+                        {{ form_widget(form.address) }}
+                        {{ form_errors(form.address) }}
+                    </div>
+                </div>
+
+                <!-- Informations parent/tuteur -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
+                    <div class="md:col-span-2">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
+                            Informations parent/tuteur (si mineur)
+                        </h3>
+                        <p class="text-sm text-gray-600 mb-4">
+                            Ces informations sont obligatoires pour les élèves mineurs
+                        </p>
+                    </div>
+                    
+                    <div>
+                        {{ form_label(form.parentName, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
+                        {{ form_widget(form.parentName) }}
+                        {{ form_errors(form.parentName) }}
+                    </div>
+                    
+                    <div>
+                        {{ form_label(form.parentEmail, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
+                        {{ form_widget(form.parentEmail) }}
+                        {{ form_errors(form.parentEmail) }}
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                        {{ form_label(form.parentPhone, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
+                        {{ form_widget(form.parentPhone) }}
+                        {{ form_errors(form.parentPhone) }}
+                    </div>
+                </div>
+
+                <!-- Informations musicales -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
+                    <div class="md:col-span-2">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
+                            Informations musicales
+                        </h3>
+                    </div>
+                    
+                    <div>
+                        {{ form_label(form.interestedInstrument, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
+                        {{ form_widget(form.interestedInstrument) }}
+                        {{ form_errors(form.interestedInstrument) }}
+                    </div>
+                    
+                    <div>
+                        {{ form_label(form.level, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
+                        {{ form_widget(form.level) }}
+                        {{ form_errors(form.level) }}
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                        {{ form_label(form.message, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
+                        {{ form_widget(form.message) }}
+                        {{ form_errors(form.message) }}
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="pt-6">
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200">
+                        Envoyer ma demande de préinscription
+                    </button>
+                </div>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+
+        <!-- Information Cards -->
+        <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-blue-50 p-6 rounded-lg">
+                <div class="text-3xl mb-4">🎯</div>
+                <h3 class="text-lg font-semibold mb-2">Étape 1</h3>
+                <p class="text-gray-600">Remplissez le formulaire de préinscription</p>
+            </div>
+            
+            <div class="bg-green-50 p-6 rounded-lg">
+                <div class="text-3xl mb-4">📞</div>
+                <h3 class="text-lg font-semibold mb-2">Étape 2</h3>
+                <p class="text-gray-600">Nous vous contactons sous 48h pour un entretien</p>
+            </div>
+            
+            <div class="bg-purple-50 p-6 rounded-lg">
+                <div class="text-3xl mb-4">🎵</div>
+                <h3 class="text-lg font-semibold mb-2">Étape 3</h3>
+                <p class="text-gray-600">Début des cours selon vos disponibilités</p>
+            </div>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="mt-12 bg-gray-50 p-8 rounded-lg">
+            <h3 class="text-xl font-semibold mb-4">Besoin d'aide ?</h3>
+            <p class="text-gray-600 mb-4">
+                N'hésitez pas à nous contacter directement pour toute question concernant les cours ou l'inscription.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4">
+                <a href="tel:{{ organization.phone }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                    📞 {{ organization.phone }}
+                </a>
+                <a href="mailto:{{ organization.email }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                    ✉️ {{ organization.email }}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,231 @@
+{% extends 'public/layout.html.twig' %}
+
+{% block title %}Contact - {{ organization.name }}{% endblock %}
+
+{% block main_content %}
+<!-- Header -->
+<div class="bg-blue-600 text-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">
+                Contactez-nous
+            </h1>
+            <p class="text-xl max-w-2xl mx-auto">
+                Nous sommes là pour répondre à toutes vos questions
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Contact Section -->
+<div class="py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- Contact Information -->
+            <div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-8">
+                    Informations de contact
+                </h2>
+                
+                <!-- Contact Cards -->
+                <div class="space-y-6">
+                    {% if organization.address %}
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <div class="bg-blue-100 p-3 rounded-full">
+                                    <span class="text-2xl">📍</span>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">Adresse</h3>
+                                <p class="text-gray-600">{{ organization.address }}</p>
+                                <a href="https://maps.google.com/?q={{ organization.address|url_encode }}" 
+                                   target="_blank" 
+                                   class="text-blue-600 hover:text-blue-800 text-sm mt-2 inline-block">
+                                    Voir sur Google Maps →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if organization.phone %}
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <div class="bg-green-100 p-3 rounded-full">
+                                    <span class="text-2xl">📞</span>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">Téléphone</h3>
+                                <p class="text-gray-600 mb-2">{{ organization.phone }}</p>
+                                <a href="tel:{{ organization.phone }}" 
+                                   class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm transition duration-200">
+                                    Appeler maintenant
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <div class="bg-purple-100 p-3 rounded-full">
+                                    <span class="text-2xl">✉️</span>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">Email</h3>
+                                <p class="text-gray-600 mb-2">{{ organization.email }}</p>
+                                <a href="mailto:{{ organization.email }}" 
+                                   class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md text-sm transition duration-200">
+                                    Envoyer un email
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Opening Hours -->
+                <div class="mt-8 bg-gray-50 p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">
+                        Horaires d'ouverture
+                    </h3>
+                    <div class="space-y-2">
+                        <div class="flex justify-between">
+                            <span class="font-medium text-gray-700">Lundi - Vendredi</span>
+                            <span class="text-gray-600">9h00 - 20h00</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="font-medium text-gray-700">Samedi</span>
+                            <span class="text-gray-600">9h00 - 18h00</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="font-medium text-gray-700">Dimanche</span>
+                            <span class="text-gray-600">Fermé</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 p-4 bg-blue-50 rounded-md">
+                        <p class="text-sm text-blue-700">
+                            <strong>Note :</strong> Les cours peuvent avoir lieu en dehors de ces horaires selon les disponibilités des professeurs.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ / Quick Answers -->
+            <div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-8">
+                    Questions fréquentes
+                </h2>
+                
+                <div class="space-y-6">
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">
+                            Comment puis-je m'inscrire ?
+                        </h3>
+                        <p class="text-gray-600 mb-4">
+                            Remplissez notre formulaire de préinscription en ligne. Nous vous contacterons ensuite pour finaliser votre inscription et organiser un premier rendez-vous.
+                        </p>
+                        <a href="{{ path('public_organization_registration', {slug: organization.slug}) }}" 
+                           class="text-blue-600 hover:text-blue-800 font-medium">
+                            Formulaire de préinscription →
+                        </a>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">
+                            Proposez-vous des cours d'essai ?
+                        </h3>
+                        <p class="text-gray-600">
+                            Oui ! Nous proposons un cours d'essai gratuit pour vous permettre de rencontrer le professeur et découvrir notre pédagogie avant de vous engager.
+                        </p>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">
+                            Faut-il avoir son propre instrument ?
+                        </h3>
+                        <p class="text-gray-600">
+                            Pour les cours, nos salles sont équipées. Cependant, avoir un instrument chez soi est recommandé pour pratiquer. Nous pouvons vous conseiller sur l'achat ou la location.
+                        </p>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">
+                            Quels sont vos tarifs ?
+                        </h3>
+                        <p class="text-gray-600">
+                            Nos tarifs varient selon le type de cours (individuel/collectif), la durée et la fréquence. Contactez-nous pour recevoir notre grille tarifaire détaillée.
+                        </p>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">
+                            À partir de quel âge peut-on commencer ?
+                        </h3>
+                        <p class="text-gray-600">
+                            Nous accueillons les enfants dès 3 ans avec nos cours d'éveil musical. Pour les instruments, l'âge minimal varie selon l'instrument choisi (généralement à partir de 5-6 ans).
+                        </p>
+                    </div>
+                </div>
+
+                <!-- CTA -->
+                <div class="mt-8 bg-blue-600 text-white p-6 rounded-lg text-center">
+                    <h3 class="text-xl font-semibold mb-4">
+                        Vous ne trouvez pas la réponse à votre question ?
+                    </h3>
+                    <p class="mb-6">
+                        N'hésitez pas à nous contacter directement, nous serons ravis de vous renseigner !
+                    </p>
+                    <div class="space-x-4">
+                        <a href="tel:{{ organization.phone }}" 
+                           class="bg-white text-blue-600 px-6 py-2 rounded-md font-medium hover:bg-gray-100 transition duration-200">
+                            Nous appeler
+                        </a>
+                        <a href="mailto:{{ organization.email }}" 
+                           class="border-2 border-white text-white px-6 py-2 rounded-md font-medium hover:bg-white hover:text-blue-600 transition duration-200">
+                            Nous écrire
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Map Section (placeholder) -->
+{% if organization.address %}
+<div class="bg-gray-100 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">
+                Nous trouver
+            </h2>
+            <p class="text-gray-600">
+                {{ organization.address }}
+            </p>
+        </div>
+        
+        <!-- Google Maps Embed Placeholder -->
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <div class="bg-gray-200 h-96 rounded-lg flex items-center justify-center">
+                <div class="text-center">
+                    <div class="text-4xl mb-4">🗺️</div>
+                    <p class="text-gray-600 mb-4">Plan d'accès</p>
+                    <a href="https://maps.google.com/?q={{ organization.address|url_encode }}" 
+                       target="_blank" 
+                       class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md transition duration-200">
+                        Ouvrir dans Google Maps
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

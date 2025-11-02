@@ -13,6 +13,7 @@ use App\Entity\Course;
 use App\Entity\Lesson;
 use App\Entity\Enrollment;
 use App\Entity\Payment;
+use App\Entity\PreRegistration;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -53,6 +54,9 @@ class AppFixtures extends Fixture
         // Create payments
         $this->createPayments($manager, $users['students'], $organization);
 
+        // Create pre-registrations
+        $this->createPreRegistrations($manager, $organization);
+
         $manager->flush();
     }
 
@@ -70,7 +74,7 @@ class AppFixtures extends Fixture
                     ->setMaxAdmins(1)
                     ->setActive(true)
                     ->setCreatedAt(new \DateTime())
-                    ->setSlug('ecole-demo-' . uniqid());
+                    ->setSlug('ecole-demo');
         
         $manager->persist($organization);
         $manager->flush();
@@ -89,6 +93,7 @@ class AppFixtures extends Fixture
         $connection->executeStatement('DELETE FROM enrollment');
         $connection->executeStatement('DELETE FROM instrument_rental');
         $connection->executeStatement('DELETE FROM course');
+        $connection->executeStatement('DELETE FROM pre_registration');
         $connection->executeStatement('DELETE FROM student');
         $connection->executeStatement('DELETE FROM teacher');
         $connection->executeStatement('DELETE FROM admin');
@@ -345,6 +350,79 @@ class AppFixtures extends Fixture
                     ->setOrganization($organization);
             
             $manager->persist($payment);
+        }
+    }
+
+    private function createPreRegistrations(ObjectManager $manager, Organization $organization): void
+    {
+        $preRegistrationsData = [
+            [
+                'Alice', 'Martin', 'alice.martin@email.com', '0123456790', '2010-05-15',
+                '15 rue des Fleurs, 75001 Paris', 
+                'Marie Martin', 'marie.martin@email.com', '0123456791',
+                'piano', 'beginner', 'Ma fille aimerait apprendre le piano. Elle écoute beaucoup de musique classique.',
+                PreRegistration::STATUS_PENDING, -2
+            ],
+            [
+                'Thomas', 'Dubois', 'thomas.dubois@email.com', '0123456792', '2008-03-22',
+                '42 avenue Mozart, 75002 Paris',
+                'Jean Dubois', 'jean.dubois@email.com', '0123456793',
+                'guitar', 'beginner', 'Thomas voudrait apprendre la guitare pour jouer du rock.',
+                PreRegistration::STATUS_CONTACTED, -5
+            ],
+            [
+                'Emma', 'Rousseau', 'emma.rousseau@email.com', '0123456794', '2009-11-08',
+                '8 boulevard Saint-Germain, 75003 Paris',
+                'Claire Rousseau', 'claire.rousseau@email.com', '0123456795', 
+                'violin', 'beginner', 'Emma souhaite découvrir le violon après avoir vu un concert.',
+                PreRegistration::STATUS_PENDING, -1
+            ],
+            [
+                'Maxime', 'Lefebvre', 'maxime.lefebvre@email.com', '0123456796', '1995-07-12',
+                '23 rue de Rivoli, 75004 Paris',
+                null, null, null,
+                'drums', 'intermediate', 'J\'ai déjà joué dans un groupe amateur, je souhaite me perfectionner.',
+                PreRegistration::STATUS_ENROLLED, -10
+            ],
+            [
+                'Sofia', 'Garcia', 'sofia.garcia@email.com', '0123456797', '2011-01-30',
+                '67 rue de la Paix, 75005 Paris',
+                'Carlos Garcia', 'carlos.garcia@email.com', '0123456798',
+                'voice', 'beginner', 'Sofia adore chanter et voudrait prendre des cours de chant.',
+                PreRegistration::STATUS_CONTACTED, -7
+            ],
+            [
+                'Lucas', 'Bernard', 'lucas.bernard@email.com', '0123456799', '2007-09-14',
+                '134 avenue des Champs, 75006 Paris',
+                'Michel Bernard', 'michel.bernard@email.com', '0123456800',
+                'flute', 'beginner', 'Lucas joue déjà un peu de flûte à bec et voudrait passer à la flûte traversière.',
+                PreRegistration::STATUS_PENDING, -3
+            ],
+        ];
+
+        foreach ($preRegistrationsData as [$firstname, $lastname, $email, $phone, $birthDate, $address, $parentName, $parentEmail, $parentPhone, $instrument, $level, $message, $status, $daysAgo]) {
+            $preRegistration = new PreRegistration();
+            $preRegistration->setFirstname($firstname)
+                          ->setLastname($lastname)
+                          ->setEmail($email)
+                          ->setPhone($phone)
+                          ->setDateOfBirth(new \DateTime($birthDate))
+                          ->setAddress($address)
+                          ->setParentName($parentName)
+                          ->setParentEmail($parentEmail)
+                          ->setParentPhone($parentPhone)
+                          ->setInterestedInstrument($instrument)
+                          ->setLevel($level)
+                          ->setMessage($message)
+                          ->setStatus($status)
+                          ->setOrganization($organization)
+                          ->setCreatedAt(new \DateTime("{$daysAgo} days"));
+
+            if ($status === PreRegistration::STATUS_CONTACTED) {
+                $preRegistration->setContactedAt(new \DateTime("{$daysAgo} days +1 day"));
+            }
+
+            $manager->persist($preRegistration);
         }
     }
 }

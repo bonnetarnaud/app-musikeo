@@ -1,0 +1,189 @@
+{% extends 'public/layout.html.twig' %}
+
+{% block title %}Accueil - {{ organization.name }}{% endblock %}
+
+{% block main_content %}
+<!-- Hero Section -->
+<div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <div class="text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6">
+                Bienvenue à {{ organization.name }}
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
+                Découvrez la musique dans un environnement bienveillant et professionnel. 
+                Nos professeurs expérimentés vous accompagnent dans votre apprentissage musical.
+            </p>
+            <div class="space-x-4">
+                <a href="{{ path('public_organization_registration', {slug: organization.slug}) }}" 
+                   class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-200">
+                    S'inscrire maintenant
+                </a>
+                <a href="{{ path('public_organization_courses', {slug: organization.slug}) }}" 
+                   class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition duration-200">
+                    Découvrir nos cours
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Pourquoi choisir {{ organization.name }} ?
+            </h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Une école de musique moderne qui place l'élève au cœur de l'apprentissage
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Feature 1 -->
+            <div class="text-center">
+                <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span class="text-2xl">🎓</span>
+                </div>
+                <h3 class="text-xl font-semibold mb-4">Professeurs qualifiés</h3>
+                <p class="text-gray-600">
+                    Nos enseignants sont diplômés des meilleurs conservatoires et ont une expérience pédagogique reconnue.
+                </p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="text-center">
+                <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span class="text-2xl">🎵</span>
+                </div>
+                <h3 class="text-xl font-semibold mb-4">Méthode adaptée</h3>
+                <p class="text-gray-600">
+                    Cours individuels ou collectifs, nous adaptons notre pédagogie à votre niveau et vos objectifs.
+                </p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="text-center">
+                <div class="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span class="text-2xl">🏠</span>
+                </div>
+                <h3 class="text-xl font-semibold mb-4">Ambiance conviviale</h3>
+                <p class="text-gray-600">
+                    Un cadre chaleureux et bienveillant pour apprendre et progresser à votre rythme.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Instruments Section -->
+<div class="py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Nos instruments
+            </h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Large choix d'instruments pour tous les goûts et tous les âges
+            </p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+            {% set instruments = [
+                {name: 'Piano', icon: '🎹'},
+                {name: 'Guitare', icon: '🎸'},
+                {name: 'Violon', icon: '🎻'},
+                {name: 'Batterie', icon: '🥁'},
+                {name: 'Flûte', icon: '🪈'},
+                {name: 'Chant', icon: '🎤'}
+            ] %}
+            
+            {% for instrument in instruments %}
+            <div class="text-center p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition duration-200">
+                <div class="text-4xl mb-3">{{ instrument.icon }}</div>
+                <h3 class="font-semibold text-gray-900">{{ instrument.name }}</h3>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- CTA Section -->
+<div class="bg-blue-600 text-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl md:text-4xl font-bold mb-6">
+            Prêt à commencer votre aventure musicale ?
+        </h2>
+        <p class="text-xl mb-8 max-w-2xl mx-auto">
+            Rejoignez notre communauté de musiciens passionnés et découvrez le plaisir de jouer !
+        </p>
+        <a href="{{ path('public_organization_registration', {slug: organization.slug}) }}" 
+           class="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition duration-200">
+            Demander une préinscription
+        </a>
+    </div>
+</div>
+
+<!-- Contact Info -->
+<div class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <!-- Contact Details -->
+            <div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-6">Contactez-nous</h2>
+                <div class="space-y-4">
+                    {% if organization.address %}
+                    <div class="flex items-start">
+                        <span class="text-2xl mr-4">📍</span>
+                        <div>
+                            <h3 class="font-semibold">Adresse</h3>
+                            <p class="text-gray-600">{{ organization.address }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if organization.phone %}
+                    <div class="flex items-start">
+                        <span class="text-2xl mr-4">📞</span>
+                        <div>
+                            <h3 class="font-semibold">Téléphone</h3>
+                            <p class="text-gray-600">{{ organization.phone }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="flex items-start">
+                        <span class="text-2xl mr-4">✉️</span>
+                        <div>
+                            <h3 class="font-semibold">Email</h3>
+                            <p class="text-gray-600">{{ organization.email }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Contact -->
+            <div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-6">Horaires d'ouverture</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="space-y-2">
+                        <div class="flex justify-between">
+                            <span class="font-medium">Lundi - Vendredi</span>
+                            <span class="text-gray-600">9h00 - 20h00</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="font-medium">Samedi</span>
+                            <span class="text-gray-600">9h00 - 18h00</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="font-medium">Dimanche</span>
+                            <span class="text-gray-600">Fermé</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

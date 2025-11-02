@@ -64,9 +64,16 @@ class Organization
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'organization')]
     private Collection $users;
 
+    /**
+     * @var Collection<int, PreRegistration>
+     */
+    #[ORM\OneToMany(targetEntity: PreRegistration::class, mappedBy: 'organization')]
+    private Collection $preRegistrations;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->preRegistrations = new ArrayCollection();
         $this->createdAt = new \DateTime();
         $this->isActive = true;
         $this->timezone = 'Europe/Paris';
@@ -257,6 +264,33 @@ class Organization
         if ($this->users->removeElement($user)) {
             if ($user->getOrganization() === $this) {
                 $user->setOrganization(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PreRegistration>
+     */
+    public function getPreRegistrations(): Collection
+    {
+        return $this->preRegistrations;
+    }
+
+    public function addPreRegistration(PreRegistration $preRegistration): static
+    {
+        if (!$this->preRegistrations->contains($preRegistration)) {
+            $this->preRegistrations->add($preRegistration);
+            $preRegistration->setOrganization($this);
+        }
+        return $this;
+    }
+
+    public function removePreRegistration(PreRegistration $preRegistration): static
+    {
+        if ($this->preRegistrations->removeElement($preRegistration)) {
+            if ($preRegistration->getOrganization() === $this) {
+                $preRegistration->setOrganization(null);
             }
         }
         return $this;
