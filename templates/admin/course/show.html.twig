@@ -1,0 +1,259 @@
+{% extends 'app-layout/layout.html.twig' %}
+
+{% block title %}{{ course.name }} - {{ organization.name }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block main_content %}
+<div class="course-detail-page">
+    <!-- Header -->
+    <div class="detail-header">
+        <div class="detail-header-content">
+            <div class="detail-breadcrumb">
+                <a href="{{ path('app_course_index') }}" class="breadcrumb-link">Cours</a>
+                <span class="breadcrumb-separator">›</span>
+                <span class="breadcrumb-current">{{ course.name }}</span>
+            </div>
+            
+            <div class="detail-title-section">
+                <h1 class="detail-title">
+                    <span class="detail-icon">📚</span>
+                    {{ course.name }}
+                </h1>
+                {% if course.description %}
+                    <p class="detail-subtitle">{{ course.description }}</p>
+                {% endif %}
+            </div>
+
+            <div class="detail-actions">
+                <a href="{{ path('app_course_edit', {'id': course.id}) }}" class="btn-primary">
+                    <span class="btn-icon">✏️</span>
+                    Modifier
+                </a>
+                <div class="dropdown">
+                    <button class="btn-secondary dropdown-toggle" data-dropdown-toggle="course-actions">
+                        ⋮ Actions
+                    </button>
+                    <div class="dropdown-menu" id="course-actions">
+                        <a href="{{ path('app_course_edit', {'id': course.id}) }}" class="dropdown-item">
+                            ✏️ Modifier le cours
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <form method="post" action="{{ path('app_course_delete', {'id': course.id}) }}" class="dropdown-form">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ course.id) }}">
+                            <button type="submit" class="dropdown-item dropdown-item-danger" 
+                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce cours ? Cette action est irréversible.')">
+                                🗑️ Supprimer le cours
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="detail-content">
+        <!-- Main Info -->
+        <div class="detail-main">
+            <!-- Course Overview -->
+            <div class="detail-card">
+                <h2 class="card-title">
+                    <span class="card-icon">ℹ️</span>
+                    Vue d'ensemble
+                </h2>
+                
+                <div class="course-overview">
+                    <div class="overview-item">
+                        <span class="overview-label">Professeur :</span>
+                        <div class="teacher-info">
+                            <span class="teacher-avatar">👨‍🏫</span>
+                            <span class="teacher-name">{{ course.teacher.fullName }}</span>
+                            {% if course.teacher.email %}
+                                <a href="mailto:{{ course.teacher.email }}" class="teacher-email">{{ course.teacher.email }}</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    {% if course.description %}
+                        <div class="overview-item">
+                            <span class="overview-label">Description :</span>
+                            <div class="course-description-full">{{ course.description }}</div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Students -->
+            <div class="detail-card">
+                <h2 class="card-title">
+                    <span class="card-icon">👥</span>
+                    Élèves inscrits
+                    <span class="title-badge">{{ course.enrollments|length }}</span>
+                </h2>
+                
+                {% if course.enrollments|length > 0 %}
+                    <div class="students-list">
+                        {% for enrollment in course.enrollments %}
+                            <div class="student-item">
+                                <div class="student-avatar">👤</div>
+                                <div class="student-info">
+                                    <div class="student-name">{{ enrollment.student.fullName }}</div>
+                                    <div class="student-details">
+                                        <span class="student-email">{{ enrollment.student.email }}</span>
+                                        <span class="enrollment-date">Inscrit le {{ enrollment.dateEnrolled|date('d/m/Y') }}</span>
+                                    </div>
+                                </div>
+                                <div class="student-status">
+                                    <span class="status-badge status-{{ enrollment.status }}">
+                                        {% if enrollment.status == 'en_attente' %}
+                                            ⏳ En attente
+                                        {% elseif enrollment.status == 'valide' %}
+                                            ✅ Validé
+                                        {% elseif enrollment.status == 'annule' %}
+                                            ❌ Annulé
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state-small">
+                        <div class="empty-icon">👥</div>
+                        <p class="empty-text">Aucun élève inscrit pour le moment</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Lessons -->
+            <div class="detail-card">
+                <h2 class="card-title">
+                    <span class="card-icon">📅</span>
+                    Leçons programmées
+                    <span class="title-badge">{{ course.lessons|length }}</span>
+                </h2>
+                
+                {% if course.lessons|length > 0 %}
+                    <div class="lessons-list">
+                        {% for lesson in course.lessons|slice(0, 10) %}
+                            <div class="lesson-item">
+                                <div class="lesson-date">
+                                    <div class="lesson-day">{{ lesson.startDatetime|date('d') }}</div>
+                                    <div class="lesson-month">{{ lesson.startDatetime|date('M') }}</div>
+                                </div>
+                                <div class="lesson-info">
+                                    <div class="lesson-time">
+                                        {{ lesson.startDatetime|date('H:i') }} - {{ lesson.endDatetime|date('H:i') }}
+                                    </div>
+                                    {% if lesson.room %}
+                                        <div class="lesson-room">📍 {{ lesson.room.name }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="lesson-duration">
+                                    {% set duration = lesson.duration %}
+                                    {% if duration %}
+                                        {{ duration.h }}h{{ duration.i > 0 ? duration.i ~ 'min' : '' }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                        
+                        {% if course.lessons|length > 10 %}
+                            <div class="lessons-more">
+                                <span class="more-text">Et {{ course.lessons|length - 10 }} leçon(s) de plus...</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="empty-state-small">
+                        <div class="empty-icon">📅</div>
+                        <p class="empty-text">Aucune leçon programmée</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="detail-sidebar">
+            <!-- Quick Stats -->
+            <div class="sidebar-card">
+                <h3 class="sidebar-title">Statistiques</h3>
+                <div class="sidebar-stats">
+                    <div class="sidebar-stat">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-content">
+                            <div class="stat-number">{{ course.enrollments|length }}</div>
+                            <div class="stat-label">Élèves</div>
+                        </div>
+                    </div>
+                    <div class="sidebar-stat">
+                        <div class="stat-icon">📅</div>
+                        <div class="stat-content">
+                            <div class="stat-number">{{ course.lessons|length }}</div>
+                            <div class="stat-label">Leçons</div>
+                        </div>
+                    </div>
+                    <div class="sidebar-stat">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-content">
+                            <div class="stat-number">
+                                {{ course.enrollments|filter(e => e.status == 'valide')|length }}
+                            </div>
+                            <div class="stat-label">Validés</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Teacher Info -->
+            <div class="sidebar-card">
+                <h3 class="sidebar-title">Professeur</h3>
+                <div class="teacher-card">
+                    <div class="teacher-avatar-large">👨‍🏫</div>
+                    <div class="teacher-info-detailed">
+                        <div class="teacher-name-large">{{ course.teacher.fullName }}</div>
+                        {% if course.teacher.email %}
+                            <div class="teacher-contact">
+                                <a href="mailto:{{ course.teacher.email }}" class="contact-link">
+                                    📧 {{ course.teacher.email }}
+                                </a>
+                            </div>
+                        {% endif %}
+                        {% if course.teacher.phone %}
+                            <div class="teacher-contact">
+                                <a href="tel:{{ course.teacher.phone }}" class="contact-link">
+                                    📞 {{ course.teacher.phone }}
+                                </a>
+                            </div>
+                        {% endif %}
+                        {% if course.teacher.biography %}
+                            <div class="teacher-bio">
+                                {{ course.teacher.biography|slice(0, 150) }}
+                                {% if course.teacher.biography|length > 150 %}...{% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="sidebar-card">
+                <h3 class="sidebar-title">Actions rapides</h3>
+                <div class="sidebar-actions">
+                    <a href="{{ path('app_course_edit', {'id': course.id}) }}" class="sidebar-action">
+                        <span class="action-icon">✏️</span>
+                        Modifier le cours
+                    </a>
+                    <button class="sidebar-action" onclick="window.print()">
+                        <span class="action-icon">🖨️</span>
+                        Imprimer la fiche
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

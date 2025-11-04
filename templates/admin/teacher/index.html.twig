@@ -1,0 +1,236 @@
+{% extends 'app-layout/layout.html.twig' %}
+
+{% block title %}Gestion des Professeurs{% endblock %}
+
+{% block main_content %}
+<div class="teachers-management">
+    <!-- Header avec titre et actions -->
+    <div class="page-header">
+        <div class="page-header-content">
+            <h1 class="page-title">
+                <svg class="page-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"></path>
+                </svg>
+                Gestion des Professeurs
+            </h1>
+            <p class="page-description">Gérez l'équipe pédagogique de votre organisation</p>
+        </div>
+        <div class="page-actions">
+            <a href="{{ path('app_teacher_new') }}" class="btn-primary">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Nouveau Professeur
+            </a>
+        </div>
+    </div>
+
+    <!-- Filtres et recherche -->
+    <div class="filters-section">
+        <form method="GET" class="filters-form">
+            <div class="filter-group">
+                <div class="search-input">
+                    <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    <input type="text" name="search" value="{{ search }}" placeholder="Rechercher un professeur..." class="search-field">
+                </div>
+                
+                <select name="status" class="status-filter">
+                    <option value="">Tous les statuts</option>
+                    <option value="active" {{ status == 'active' ? 'selected' : '' }}>Actifs</option>
+                    <option value="inactive" {{ status == 'inactive' ? 'selected' : '' }}>Inactifs</option>
+                </select>
+                
+                <button type="submit" class="btn-secondary">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+                    </svg>
+                    Filtrer
+                </button>
+                
+                {% if search or status %}
+                    <a href="{{ path('app_teacher_index') }}" class="btn-ghost">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                        Réinitialiser
+                    </a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+    <!-- Statistiques rapides -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon stat-primary">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+            </div>
+            <div class="stat-content">
+                <div class="stat-number">{{ teachers|length }}</div>
+                <div class="stat-label">Total Professeurs</div>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon stat-success">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <div class="stat-content">
+                <div class="stat-number">{{ teachers|filter(t => 'ROLE_TEACHER' in t.roles)|length }}</div>
+                <div class="stat-label">Actifs</div>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon stat-warning">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <div class="stat-content">
+                <div class="stat-number">3</div>
+                <div class="stat-label">En attente</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Liste des professeurs -->
+    {% if teachers|length > 0 %}
+        <div class="teachers-grid">
+            {% for teacher in teachers %}
+                <div class="teacher-card">
+                    <div class="teacher-header">
+                        <div class="teacher-avatar">
+                            <div class="avatar-placeholder">
+                                {{ teacher.firstname|first|upper }}{{ teacher.lastname|first|upper }}
+                            </div>
+                        </div>
+                        <div class="teacher-info">
+                            <h3 class="teacher-name">{{ teacher.firstname }} {{ teacher.lastname }}</h3>
+                            <p class="teacher-email">{{ teacher.email }}</p>
+                            <div class="teacher-status">
+                                {% if 'ROLE_TEACHER' in teacher.roles %}
+                                    <span class="status-badge status-active">Actif</span>
+                                {% else %}
+                                    <span class="status-badge status-inactive">Inactif</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="teacher-actions">
+                            <div class="actions-dropdown">
+                                <button class="actions-toggle" onclick="toggleActions({{ teacher.id }})">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+                                    </svg>
+                                </button>
+                                <div class="actions-menu" id="actions-{{ teacher.id }}">
+                                    <a href="{{ path('app_teacher_show', {id: teacher.id}) }}" class="action-item">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                        </svg>
+                                        Voir le profil
+                                    </a>
+                                    <a href="{{ path('app_teacher_edit', {id: teacher.id}) }}" class="action-item">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                        </svg>
+                                        Modifier
+                                    </a>
+                                    <div class="action-divider"></div>
+                                    <form method="post" action="{{ path('app_teacher_delete', {id: teacher.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce professeur ?')">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ teacher.id) }}">
+                                        <button type="submit" class="action-item action-danger">
+                                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                            </svg>
+                                            Supprimer
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="teacher-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Spécialités:</span>
+                            <span class="detail-value">Piano, Violon</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Élèves:</span>
+                            <span class="detail-value">12 élèves</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Dernière connexion:</span>
+                            <span class="detail-value">Il y a 2 jours</span>
+                        </div>
+                    </div>
+                    
+                    <div class="teacher-footer">
+                        <a href="{{ path('app_teacher_show', {id: teacher.id}) }}" class="btn-outline">
+                            Voir le profil complet
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"></path>
+                </svg>
+            </div>
+            <h3 class="empty-title">Aucun professeur trouvé</h3>
+            <p class="empty-description">
+                {% if search or status %}
+                    Aucun professeur ne correspond à vos critères de recherche.
+                {% else %}
+                    Vous n'avez pas encore ajouté de professeurs à votre organisation.
+                {% endif %}
+            </p>
+            {% if not search and not status %}
+                <a href="{{ path('app_teacher_new') }}" class="btn-primary">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    Ajouter le premier professeur
+                </a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+<script>
+function toggleActions(teacherId) {
+    const menu = document.getElementById('actions-' + teacherId);
+    const allMenus = document.querySelectorAll('.actions-menu');
+    
+    // Fermer tous les autres menus
+    allMenus.forEach(m => {
+        if (m !== menu) {
+            m.classList.remove('show');
+        }
+    });
+    
+    // Toggle le menu actuel
+    menu.classList.toggle('show');
+}
+
+// Fermer les menus quand on clique ailleurs
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.actions-dropdown')) {
+        document.querySelectorAll('.actions-menu').forEach(menu => {
+            menu.classList.remove('show');
+        });
+    }
+});
+</script>
+{% endblock %}

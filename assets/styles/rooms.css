@@ -1,0 +1,769 @@
+/* ==========================================================================
+   Rooms Management Styles
+   ========================================================================== */
+
+/* Rooms Management Layout */
+.rooms-management {
+    @apply flex flex-col h-full;
+}
+
+/* Header */
+.rooms-header {
+    @apply bg-white border-b border-gray-200 px-6 py-6;
+}
+
+.rooms-header-content {
+    @apply flex items-center justify-between max-w-7xl mx-auto;
+}
+
+.rooms-title-section {
+    @apply flex-1;
+}
+
+.rooms-title {
+    @apply text-2xl font-bold text-gray-900 flex items-center gap-3 mb-2;
+}
+
+.rooms-icon {
+    @apply text-3xl;
+}
+
+.rooms-subtitle {
+    @apply text-gray-600 text-lg;
+}
+
+.rooms-actions {
+    @apply flex gap-3;
+}
+
+/* Stats */
+.rooms-stats {
+    @apply bg-gray-50 px-6 py-4 border-b border-gray-200;
+}
+
+.rooms-stats {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto;
+}
+
+.stat-card {
+    @apply bg-white rounded-lg p-4 shadow-sm border border-gray-100 flex items-center gap-3;
+}
+
+.stat-icon {
+    @apply text-2xl bg-blue-50 w-12 h-12 rounded-lg flex items-center justify-center;
+}
+
+.stat-content {
+    @apply flex-1;
+}
+
+.stat-number {
+    @apply text-2xl font-bold text-gray-900;
+}
+
+.stat-label {
+    @apply text-sm text-gray-600;
+}
+
+/* Filters */
+.rooms-filters {
+    @apply bg-white px-6 py-4 border-b border-gray-200;
+}
+
+.filters-form {
+    @apply max-w-7xl mx-auto flex flex-wrap items-end gap-4;
+}
+
+.filter-group {
+    @apply flex flex-col;
+}
+
+.filter-label {
+    @apply block text-sm font-medium text-gray-700 mb-1;
+}
+
+.filter-input,
+.filter-select {
+    @apply px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500;
+}
+
+.filter-input {
+    @apply w-64;
+}
+
+.filter-select {
+    @apply w-48;
+}
+
+.filter-actions {
+    @apply flex gap-2;
+}
+
+.btn-filter {
+    @apply px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors;
+}
+
+.btn-clear {
+    @apply px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors;
+}
+
+/* Content */
+.rooms-content {
+    @apply flex-1 px-6 py-6 overflow-auto;
+}
+
+/* Rooms Grid */
+.rooms-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 max-w-7xl mx-auto;
+}
+
+.room-card {
+    @apply bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow;
+}
+
+/* Room Card Header */
+.room-header {
+    @apply flex items-start justify-between p-4 border-b border-gray-100;
+}
+
+.room-info {
+    @apply flex gap-3 flex-1;
+}
+
+.room-icon {
+    @apply text-2xl bg-gray-100 w-12 h-12 rounded-lg flex items-center justify-center;
+}
+
+.room-details {
+    @apply flex-1;
+}
+
+.room-name {
+    @apply font-semibold text-gray-900 text-lg mb-1;
+}
+
+.room-capacity {
+    @apply text-sm text-gray-600 mb-1;
+}
+
+.room-location {
+    @apply text-xs text-gray-500;
+}
+
+.room-actions .dropdown {
+    @apply relative;
+}
+
+.dropdown-toggle {
+    @apply p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-md transition-colors;
+}
+
+.dropdown-menu {
+    @apply absolute right-0 top-full mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 py-1 z-10 hidden;
+}
+
+.dropdown-menu.show {
+    @apply block;
+}
+
+.dropdown-item {
+    @apply block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors;
+}
+
+.dropdown-item-danger {
+    @apply text-red-600 hover:bg-red-50;
+}
+
+.dropdown-divider {
+    @apply border-t border-gray-100 my-1;
+}
+
+.dropdown-form {
+    @apply m-0;
+}
+
+/* Room Card Stats */
+.room-stats {
+    @apply flex justify-between items-center px-4 py-3 bg-gray-50;
+}
+
+.room-stat {
+    @apply flex items-center gap-1 text-sm text-gray-600;
+}
+
+/* Room Badges */
+.room-badges {
+    @apply flex flex-wrap gap-2 px-4 py-3;
+}
+
+.status-badge {
+    @apply px-2 py-1 text-xs font-medium rounded-full;
+}
+
+.status-empty {
+    @apply bg-gray-100 text-gray-700;
+}
+
+.status-available {
+    @apply bg-green-100 text-green-800;
+}
+
+.status-busy {
+    @apply bg-red-100 text-red-800;
+}
+
+.capacity-badge {
+    @apply px-2 py-1 text-xs font-medium rounded-full;
+}
+
+.capacity-small {
+    @apply bg-blue-100 text-blue-800;
+}
+
+.capacity-medium {
+    @apply bg-purple-100 text-purple-800;
+}
+
+.capacity-large {
+    @apply bg-orange-100 text-orange-800;
+}
+
+/* Room Card Footer */
+.room-footer {
+    @apply flex gap-2 p-4 border-t border-gray-100;
+}
+
+/* Room Detail Page */
+.room-detail {
+    @apply flex flex-col h-full;
+}
+
+/* Room Detail Header */
+.room-detail-header {
+    @apply bg-white border-b border-gray-200 px-6 py-6;
+}
+
+.room-detail-header-content {
+    @apply max-w-7xl mx-auto;
+}
+
+.room-detail-navigation {
+    @apply mb-4;
+}
+
+.back-link {
+    @apply text-blue-600 hover:text-blue-800 font-medium transition-colors;
+}
+
+.room-detail-title-section {
+    @apply flex items-center gap-4 mb-4;
+}
+
+.room-detail-icon {
+    @apply text-4xl bg-gray-100 w-16 h-16 rounded-lg flex items-center justify-center;
+}
+
+.room-detail-info {
+    @apply flex-1;
+}
+
+.room-detail-title {
+    @apply text-3xl font-bold text-gray-900 mb-1;
+}
+
+.room-detail-subtitle {
+    @apply text-gray-600 mb-2;
+}
+
+.room-detail-specs {
+    @apply flex gap-4 text-sm text-gray-600;
+}
+
+.spec-capacity,
+.spec-location {
+    @apply flex items-center gap-1;
+}
+
+.room-detail-actions {
+    @apply flex gap-3;
+}
+
+/* Room Detail Content */
+.room-detail-content {
+    @apply flex-1 px-6 py-6 overflow-auto;
+}
+
+/* Overview Stats */
+.room-overview {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 max-w-7xl mx-auto;
+}
+
+.overview-card {
+    @apply bg-white rounded-lg p-4 border border-gray-200 shadow-sm flex items-center gap-3;
+}
+
+.overview-icon {
+    @apply text-2xl bg-gray-50 w-12 h-12 rounded-lg flex items-center justify-center;
+}
+
+.overview-content {
+    @apply flex-1;
+}
+
+.overview-number {
+    @apply text-2xl font-bold text-gray-900;
+}
+
+.overview-label {
+    @apply text-sm text-gray-600;
+}
+
+/* Detail Grid */
+.room-detail-grid {
+    @apply grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto;
+}
+
+/* Detail Sections */
+.detail-section {
+    @apply bg-white rounded-lg border border-gray-200 shadow-sm;
+}
+
+.section-header {
+    @apply px-6 py-4 border-b border-gray-100;
+}
+
+.section-title {
+    @apply text-lg font-semibold text-gray-900 flex items-center gap-2;
+}
+
+.section-icon {
+    @apply text-xl;
+}
+
+.section-content {
+    @apply p-6;
+}
+
+/* Info Grid */
+.info-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-4;
+}
+
+.info-item {
+    @apply space-y-1;
+}
+
+.info-item-full {
+    @apply md:col-span-2;
+}
+
+.info-label {
+    @apply block text-sm font-medium text-gray-700;
+}
+
+.info-value {
+    @apply text-gray-900;
+}
+
+.text-muted {
+    @apply text-gray-500 italic;
+}
+
+/* Lessons List */
+.lessons-list {
+    @apply space-y-3;
+}
+
+.lesson-item {
+    @apply flex items-center justify-between p-3 bg-gray-50 rounded-lg;
+}
+
+.lesson-info {
+    @apply flex-1;
+}
+
+.lesson-title {
+    @apply font-medium text-gray-900;
+}
+
+.lesson-details {
+    @apply text-sm text-gray-600 mt-1 space-x-3;
+}
+
+.lesson-notes {
+    @apply text-xs text-gray-500 mt-1;
+}
+
+.lesson-status {
+    @apply flex-shrink-0;
+}
+
+.status-today {
+    @apply bg-blue-100 text-blue-800;
+}
+
+.status-upcoming {
+    @apply bg-green-100 text-green-800;
+}
+
+.status-past {
+    @apply bg-gray-100 text-gray-600;
+}
+
+.lessons-more {
+    @apply text-center py-2;
+}
+
+/* Stats Grid */
+.stats-grid {
+    @apply grid grid-cols-2 gap-4;
+}
+
+.stat-item {
+    @apply flex items-center gap-3 p-3 bg-gray-50 rounded-lg;
+}
+
+.stat-content {
+    @apply flex-1;
+}
+
+/* Actions Grid */
+.actions-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-4;
+}
+
+.action-card {
+    @apply flex items-center gap-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left w-full;
+}
+
+.action-card:hover {
+    @apply no-underline;
+}
+
+.action-disabled {
+    @apply opacity-50 cursor-not-allowed;
+}
+
+.action-disabled:hover {
+    @apply bg-white;
+}
+
+.action-danger {
+    @apply border-red-200 hover:bg-red-50;
+}
+
+.action-button {
+    @apply flex items-center gap-3 p-0 bg-transparent border-none w-full text-left;
+}
+
+.action-icon {
+    @apply text-2xl;
+}
+
+.action-content {
+    @apply flex-1;
+}
+
+.action-title {
+    @apply font-medium text-gray-900;
+}
+
+.action-description {
+    @apply text-sm text-gray-600;
+}
+
+/* Empty States */
+.empty-state {
+    @apply text-center py-12 max-w-md mx-auto;
+}
+
+.empty-icon {
+    @apply text-6xl mb-4;
+}
+
+.empty-title {
+    @apply text-xl font-semibold text-gray-900 mb-2;
+}
+
+.empty-description {
+    @apply text-gray-600 mb-6;
+}
+
+.empty-state-small {
+    @apply text-center py-8;
+}
+
+.empty-icon-small {
+    @apply text-3xl mb-2;
+}
+
+.empty-text {
+    @apply text-gray-500 font-medium;
+}
+
+.empty-help {
+    @apply text-sm text-gray-400 mt-1;
+}
+
+/* Room Form Page */
+.room-form-page {
+    @apply flex flex-col h-full;
+}
+
+/* Form Header */
+.form-header {
+    @apply bg-white border-b border-gray-200 px-6 py-6;
+}
+
+.form-header-content {
+    @apply flex items-center justify-between max-w-7xl mx-auto;
+}
+
+.form-navigation {
+    @apply mb-4;
+}
+
+.form-title-section {
+    @apply flex-1;
+}
+
+.form-title {
+    @apply text-2xl font-bold text-gray-900 flex items-center gap-3 mb-2;
+}
+
+.form-icon {
+    @apply text-3xl;
+}
+
+.form-subtitle {
+    @apply text-gray-600;
+}
+
+.form-header-actions {
+    @apply flex gap-3;
+}
+
+/* Form Content */
+.form-content {
+    @apply flex-1 flex gap-8 px-6 py-6 overflow-auto;
+}
+
+.form-container {
+    @apply flex-1 max-w-4xl;
+}
+
+.room-form {
+    @apply space-y-8;
+}
+
+/* Form Sections */
+.form-section {
+    @apply bg-white rounded-lg border border-gray-200 shadow-sm p-6;
+}
+
+.section-description {
+    @apply text-gray-600 mt-1;
+}
+
+/* Form Grid */
+.form-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-6 mt-6;
+}
+
+.form-group {
+    @apply space-y-2;
+}
+
+.form-group-full {
+    @apply md:col-span-2;
+}
+
+.form-label {
+    @apply block text-sm font-medium text-gray-700;
+}
+
+.form-input,
+.form-textarea {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500;
+}
+
+.form-help {
+    @apply text-sm text-gray-500;
+}
+
+/* Capacity Guide */
+.capacity-guide {
+    @apply space-y-4 mt-6;
+}
+
+.capacity-item {
+    @apply flex gap-4 p-4 bg-gray-50 rounded-lg;
+}
+
+.capacity-icon {
+    @apply text-2xl;
+}
+
+.capacity-content {
+    @apply flex-1;
+}
+
+.capacity-title {
+    @apply font-medium text-gray-900;
+}
+
+.capacity-description {
+    @apply text-sm text-gray-600 mt-1;
+}
+
+/* Usage Summary */
+.usage-summary {
+    @apply space-y-4 mt-6;
+}
+
+.usage-item {
+    @apply flex gap-4 p-4 bg-gray-50 rounded-lg;
+}
+
+.usage-icon {
+    @apply text-2xl;
+}
+
+.usage-content {
+    @apply flex-1;
+}
+
+.usage-title {
+    @apply font-medium text-gray-900;
+}
+
+.usage-value {
+    @apply text-sm text-gray-600 mb-2;
+}
+
+.usage-detail {
+    @apply flex flex-wrap gap-2;
+}
+
+.usage-tag {
+    @apply px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full;
+}
+
+.usage-more {
+    @apply px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full;
+}
+
+.usage-info {
+    @apply text-xs text-gray-500;
+}
+
+/* Form Actions */
+.form-actions {
+    @apply bg-gray-50 px-6 py-4 border-t border-gray-200;
+}
+
+.form-actions-content {
+    @apply flex justify-end gap-3 max-w-7xl mx-auto;
+}
+
+/* Form Sidebar */
+.form-sidebar {
+    @apply w-80 space-y-6;
+}
+
+.help-card {
+    @apply bg-white rounded-lg border border-gray-200 shadow-sm;
+}
+
+.help-header {
+    @apply px-4 py-3 border-b border-gray-100;
+}
+
+.help-title {
+    @apply font-medium text-gray-900;
+}
+
+.help-content {
+    @apply p-4 space-y-3;
+}
+
+.help-item {
+    @apply text-sm text-gray-600;
+}
+
+.help-example {
+    @apply text-sm text-gray-600 p-3 bg-gray-50 rounded border-l-4 border-blue-200;
+}
+
+.help-stat {
+    @apply text-sm text-gray-600;
+}
+
+.help-link {
+    @apply block text-sm text-blue-600 hover:text-blue-800 py-1 transition-colors;
+}
+
+.help-link-danger {
+    @apply text-red-600 hover:text-red-800;
+}
+
+.help-divider {
+    @apply border-t border-gray-200 my-2;
+}
+
+.help-form {
+    @apply m-0;
+}
+
+/* Common Button Styles */
+.btn-primary {
+    @apply px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors flex items-center gap-2;
+}
+
+.btn-outline {
+    @apply px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors;
+}
+
+.btn-icon {
+    @apply text-base;
+}
+
+/* Form Error Styles */
+.form-error {
+    @apply text-red-600 text-sm mt-1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .rooms-stats {
+        @apply grid-cols-2;
+    }
+    
+    .rooms-grid {
+        @apply grid-cols-1;
+    }
+    
+    .room-detail-grid {
+        @apply grid-cols-1;
+    }
+    
+    .form-content {
+        @apply flex-col;
+    }
+    
+    .form-sidebar {
+        @apply w-full;
+    }
+    
+    .info-grid {
+        @apply grid-cols-1;
+    }
+    
+    .stats-grid {
+        @apply grid-cols-1;
+    }
+    
+    .actions-grid {
+        @apply grid-cols-1;
+    }
+}

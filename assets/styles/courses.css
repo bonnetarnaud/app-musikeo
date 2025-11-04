@@ -1,0 +1,746 @@
+/* ===== COURSE MANAGEMENT STYLES ===== */
+
+/* Layout */
+.courses-management {
+    @apply min-h-screen bg-gray-50;
+}
+
+/* Header */
+.courses-header {
+    @apply bg-white border-b border-gray-200 px-6 py-8;
+}
+
+.courses-header-content {
+    @apply max-w-7xl mx-auto flex items-center justify-between;
+}
+
+.courses-title-section h1.courses-title {
+    @apply text-3xl font-bold text-gray-900 flex items-center gap-3;
+}
+
+.courses-icon {
+    @apply text-4xl;
+}
+
+.courses-subtitle {
+    @apply text-lg text-gray-600 mt-2;
+}
+
+.courses-actions {
+    @apply flex gap-3;
+}
+
+/* Stats */
+.courses-stats {
+    @apply bg-white px-6 py-6 border-b border-gray-200;
+}
+
+.courses-stats {
+    @apply max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6;
+}
+
+.stat-card {
+    @apply bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-6 flex items-center gap-4;
+}
+
+.stat-icon {
+    @apply text-3xl bg-white rounded-full w-16 h-16 flex items-center justify-center shadow-sm;
+}
+
+.stat-content .stat-number {
+    @apply text-2xl font-bold text-gray-900;
+}
+
+.stat-content .stat-label {
+    @apply text-sm text-gray-600 mt-1;
+}
+
+/* Filters */
+.courses-filters {
+    @apply bg-white px-6 py-4 border-b border-gray-200;
+}
+
+.filters-form {
+    @apply max-w-7xl mx-auto flex flex-wrap items-end gap-4;
+}
+
+.filter-group {
+    @apply flex flex-col;
+}
+
+.filter-label {
+    @apply text-sm font-medium text-gray-700 mb-1;
+}
+
+.filter-input, .filter-select {
+    @apply border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500;
+}
+
+.filter-input {
+    @apply w-64;
+}
+
+.filter-select {
+    @apply w-48;
+}
+
+.filter-actions {
+    @apply flex gap-2;
+}
+
+.btn-filter {
+    @apply bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors;
+}
+
+.btn-clear {
+    @apply bg-gray-100 text-gray-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-200 transition-colors;
+}
+
+/* Content */
+.courses-content {
+    @apply max-w-7xl mx-auto px-6 py-8;
+}
+
+/* Courses Grid */
+.courses-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+}
+
+.course-card {
+    @apply bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200;
+}
+
+/* Course Header */
+.course-header {
+    @apply flex items-start justify-between p-6 pb-4;
+}
+
+.course-info h3.course-name {
+    @apply text-xl font-semibold text-gray-900 mb-2;
+}
+
+.course-teacher {
+    @apply flex items-center gap-2 text-gray-600;
+}
+
+.teacher-avatar {
+    @apply text-lg;
+}
+
+.teacher-name {
+    @apply text-sm font-medium;
+}
+
+.course-actions {
+    @apply relative;
+}
+
+.dropdown-toggle {
+    @apply text-gray-400 hover:text-gray-600 p-1 rounded;
+}
+
+.dropdown-menu {
+    @apply absolute right-0 top-full mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 py-1 z-10 hidden;
+}
+
+.dropdown-menu.show {
+    @apply block;
+}
+
+.dropdown-item {
+    @apply block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors;
+}
+
+.dropdown-item-danger {
+    @apply text-red-600 hover:bg-red-50;
+}
+
+.dropdown-divider {
+    @apply border-t border-gray-100 my-1;
+}
+
+.dropdown-form {
+    @apply m-0;
+}
+
+.dropdown-form .dropdown-item {
+    @apply w-full text-left border-none bg-transparent;
+}
+
+/* Course Content */
+.course-description {
+    @apply px-6 text-gray-600 text-sm leading-relaxed;
+}
+
+/* Course Stats */
+.course-stats {
+    @apply flex items-center gap-4 px-6 py-4 bg-gray-50 border-t border-gray-200;
+}
+
+.course-stat {
+    @apply flex items-center gap-2 text-sm text-gray-600;
+}
+
+.course-stat .stat-icon {
+    @apply text-base;
+}
+
+/* Course Footer */
+.course-footer {
+    @apply flex gap-2 p-6 pt-4;
+}
+
+.btn-outline {
+    @apply border border-gray-300 text-gray-700 px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-50 transition-colors;
+}
+
+.btn-primary {
+    @apply bg-blue-600 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors flex items-center gap-2;
+}
+
+.btn-icon {
+    @apply text-sm;
+}
+
+/* Empty State */
+.empty-state {
+    @apply text-center py-12;
+}
+
+.empty-icon {
+    @apply text-6xl mb-4;
+}
+
+.empty-title {
+    @apply text-xl font-semibold text-gray-900 mb-2;
+}
+
+.empty-description {
+    @apply text-gray-600 mb-6 max-w-md mx-auto;
+}
+
+/* ===== COURSE FORM STYLES ===== */
+
+/* Form Page Layout */
+.course-form-page {
+    @apply min-h-screen bg-gray-50;
+}
+
+/* Form Header */
+.form-header {
+    @apply bg-white border-b border-gray-200 px-6 py-8;
+}
+
+.form-header-content {
+    @apply max-w-5xl mx-auto;
+}
+
+.form-breadcrumb {
+    @apply flex items-center gap-2 text-sm text-gray-600 mb-4;
+}
+
+.breadcrumb-link {
+    @apply text-blue-600 hover:text-blue-700;
+}
+
+.breadcrumb-separator {
+    @apply text-gray-400;
+}
+
+.breadcrumb-current {
+    @apply text-gray-900 font-medium;
+}
+
+.form-title {
+    @apply text-3xl font-bold text-gray-900 flex items-center gap-3 mb-2;
+}
+
+.form-icon {
+    @apply text-4xl;
+}
+
+.form-subtitle {
+    @apply text-lg text-gray-600;
+}
+
+/* Form Container */
+.form-container {
+    @apply max-w-5xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8;
+}
+
+.form-card {
+    @apply lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200 p-8;
+}
+
+/* Form Sections */
+.form-section {
+    @apply mb-8 last:mb-0;
+}
+
+.section-title {
+    @apply text-xl font-semibold text-gray-900 flex items-center gap-3 mb-6 pb-3 border-b border-gray-200;
+}
+
+.section-icon {
+    @apply text-2xl;
+}
+
+/* Form Grid */
+.form-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+}
+
+.form-group {
+    @apply flex flex-col;
+}
+
+.form-group-full {
+    @apply md:col-span-2;
+}
+
+.form-label {
+    @apply text-sm font-medium text-gray-700 mb-2;
+}
+
+.form-input, .form-textarea, .form-select {
+    @apply border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors;
+}
+
+
+
+.form-error {
+    @apply text-red-600 text-sm mt-1;
+}
+
+.form-help {
+    @apply text-gray-500 text-xs mt-1;
+}
+
+/* Stats Grid (for edit form) */
+.stats-grid {
+    @apply grid grid-cols-2 gap-4 mb-4;
+}
+
+.stat-item {
+    @apply bg-gray-50 rounded-lg p-4 flex items-center gap-3;
+}
+
+.stat-item .stat-icon {
+    @apply text-2xl bg-white rounded-full w-12 h-12 flex items-center justify-center;
+}
+
+.stat-item .stat-content {
+    @apply flex flex-col;
+}
+
+.stat-item .stat-number {
+    @apply text-xl font-bold text-gray-900;
+}
+
+.stat-item .stat-label {
+    @apply text-sm text-gray-600;
+}
+
+/* Warning Notice */
+.warning-notice {
+    @apply bg-yellow-50 border border-yellow-200 rounded-md p-4 flex gap-3;
+}
+
+.warning-icon {
+    @apply text-yellow-600 text-xl;
+}
+
+.warning-content {
+    @apply text-yellow-800 text-sm;
+}
+
+/* Form Actions */
+.form-actions {
+    @apply flex items-center justify-between pt-6 border-t border-gray-200;
+}
+
+.btn-cancel {
+    @apply text-gray-600 hover:text-gray-700 transition-colors;
+}
+
+.btn-submit {
+    @apply bg-blue-600 text-white px-6 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors flex items-center gap-2;
+}
+
+/* Help Panel */
+.help-panel {
+    @apply bg-white rounded-lg shadow-sm border border-gray-200 p-6 self-start;
+}
+
+.help-title {
+    @apply text-lg font-semibold text-gray-900 flex items-center gap-2 mb-4;
+}
+
+.help-icon {
+    @apply text-xl;
+}
+
+.help-section {
+    @apply mb-4 last:mb-0;
+}
+
+.help-section-title {
+    @apply text-sm font-medium text-gray-900 mb-2;
+}
+
+.help-list {
+    @apply text-sm text-gray-600 space-y-1;
+}
+
+.help-list li {
+    @apply leading-relaxed;
+}
+
+.help-actions {
+    @apply space-y-2;
+}
+
+.help-action {
+    @apply block p-3 rounded-md border border-gray-200 hover:bg-gray-50 transition-colors;
+}
+
+.action-icon {
+    @apply text-lg mr-3;
+}
+
+.action-content {
+    @apply inline-block;
+}
+
+.action-title {
+    @apply text-sm font-medium text-gray-900;
+}
+
+.action-description {
+    @apply text-xs text-gray-600;
+}
+
+/* ===== COURSE DETAIL STYLES ===== */
+
+/* Detail Page Layout */
+.course-detail-page {
+    @apply min-h-screen bg-gray-50;
+}
+
+/* Detail Header */
+.detail-header {
+    @apply bg-white border-b border-gray-200 px-6 py-8;
+}
+
+.detail-header-content {
+    @apply max-w-7xl mx-auto;
+}
+
+.detail-breadcrumb {
+    @apply flex items-center gap-2 text-sm text-gray-600 mb-4;
+}
+
+.detail-title-section {
+    @apply mb-6;
+}
+
+.detail-title {
+    @apply text-3xl font-bold text-gray-900 flex items-center gap-3 mb-2;
+}
+
+.detail-icon {
+    @apply text-4xl;
+}
+
+.detail-subtitle {
+    @apply text-lg text-gray-600;
+}
+
+.detail-actions {
+    @apply flex items-center gap-3;
+}
+
+.btn-secondary {
+    @apply bg-gray-100 text-gray-700 px-4 py-2 rounded-md font-medium hover:bg-gray-200 transition-colors;
+}
+
+/* Detail Content */
+.detail-content {
+    @apply max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8;
+}
+
+.detail-main {
+    @apply lg:col-span-2 space-y-8;
+}
+
+/* Detail Cards */
+.detail-card {
+    @apply bg-white rounded-lg shadow-sm border border-gray-200 p-6;
+}
+
+.card-title {
+    @apply text-xl font-semibold text-gray-900 flex items-center gap-3 mb-6 pb-3 border-b border-gray-200;
+}
+
+.card-icon {
+    @apply text-2xl;
+}
+
+.title-badge {
+    @apply bg-blue-100 text-blue-800 text-sm px-2 py-1 rounded-full ml-auto;
+}
+
+/* Course Overview */
+.course-overview {
+    @apply space-y-4;
+}
+
+.overview-item {
+    @apply flex flex-col gap-2;
+}
+
+.overview-label {
+    @apply text-sm font-medium text-gray-700;
+}
+
+.teacher-info {
+    @apply flex items-center gap-3;
+}
+
+.teacher-avatar {
+    @apply text-xl;
+}
+
+.teacher-name {
+    @apply font-medium text-gray-900;
+}
+
+.teacher-email {
+    @apply text-blue-600 hover:text-blue-700 text-sm;
+}
+
+.course-description-full {
+    @apply text-gray-600 leading-relaxed;
+}
+
+/* Students List */
+.students-list {
+    @apply space-y-3;
+}
+
+.student-item {
+    @apply flex items-center gap-4 p-3 bg-gray-50 rounded-lg;
+}
+
+.student-avatar {
+    @apply text-2xl bg-white rounded-full w-12 h-12 flex items-center justify-center;
+}
+
+.student-info {
+    @apply flex-1;
+}
+
+.student-name {
+    @apply font-medium text-gray-900;
+}
+
+.student-details {
+    @apply flex items-center gap-3 text-sm text-gray-600 mt-1;
+}
+
+.student-email {
+    @apply text-blue-600;
+}
+
+.enrollment-date {
+    @apply text-gray-500;
+}
+
+.student-status {
+    @apply flex items-center;
+}
+
+.status-badge {
+    @apply px-2 py-1 rounded-full text-xs font-medium;
+}
+
+.status-en_attente {
+    @apply bg-yellow-100 text-yellow-800;
+}
+
+.status-valide {
+    @apply bg-green-100 text-green-800;
+}
+
+.status-annule {
+    @apply bg-red-100 text-red-800;
+}
+
+/* Lessons List */
+.lessons-list {
+    @apply space-y-3;
+}
+
+.lesson-item {
+    @apply flex items-center gap-4 p-3 bg-gray-50 rounded-lg;
+}
+
+.lesson-date {
+    @apply text-center bg-white rounded-lg p-2 min-w-[60px];
+}
+
+.lesson-day {
+    @apply text-lg font-bold text-gray-900;
+}
+
+.lesson-month {
+    @apply text-xs text-gray-600 uppercase;
+}
+
+.lesson-info {
+    @apply flex-1;
+}
+
+.lesson-time {
+    @apply font-medium text-gray-900;
+}
+
+.lesson-room {
+    @apply text-sm text-gray-600 mt-1;
+}
+
+.lesson-duration {
+    @apply text-sm text-gray-500 bg-white px-2 py-1 rounded;
+}
+
+.lessons-more {
+    @apply text-center p-3 text-gray-500 text-sm;
+}
+
+/* Empty State Small */
+.empty-state-small {
+    @apply text-center py-8;
+}
+
+.empty-state-small .empty-icon {
+    @apply text-4xl mb-2;
+}
+
+.empty-state-small .empty-text {
+    @apply text-gray-500;
+}
+
+/* Detail Sidebar */
+.detail-sidebar {
+    @apply space-y-6;
+}
+
+.sidebar-card {
+    @apply bg-white rounded-lg shadow-sm border border-gray-200 p-6;
+}
+
+.sidebar-title {
+    @apply text-lg font-semibold text-gray-900 mb-4;
+}
+
+/* Sidebar Stats */
+.sidebar-stats {
+    @apply space-y-4;
+}
+
+.sidebar-stat {
+    @apply flex items-center gap-3;
+}
+
+.sidebar-stat .stat-icon {
+    @apply text-2xl bg-gray-50 rounded-full w-12 h-12 flex items-center justify-center;
+}
+
+.sidebar-stat .stat-content {
+    @apply flex flex-col;
+}
+
+.sidebar-stat .stat-number {
+    @apply text-xl font-bold text-gray-900;
+}
+
+.sidebar-stat .stat-label {
+    @apply text-sm text-gray-600;
+}
+
+/* Teacher Card */
+.teacher-card {
+    @apply text-center;
+}
+
+.teacher-avatar-large {
+    @apply text-4xl bg-gray-50 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4;
+}
+
+.teacher-info-detailed {
+    @apply space-y-2;
+}
+
+.teacher-name-large {
+    @apply text-lg font-semibold text-gray-900;
+}
+
+.teacher-contact {
+    @apply text-sm;
+}
+
+.contact-link {
+    @apply text-blue-600 hover:text-blue-700;
+}
+
+.teacher-bio {
+    @apply text-sm text-gray-600 leading-relaxed bg-gray-50 p-3 rounded-md;
+}
+
+/* Sidebar Actions */
+.sidebar-actions {
+    @apply space-y-2;
+}
+
+.sidebar-action {
+    @apply flex items-center gap-3 p-3 text-left w-full bg-gray-50 hover:bg-gray-100 rounded-md transition-colors;
+}
+
+.sidebar-action .action-icon {
+    @apply text-lg;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .courses-header-content {
+        @apply flex-col items-start gap-4;
+    }
+    
+    .courses-stats {
+        @apply grid-cols-2;
+    }
+    
+    .filters-form {
+        @apply flex-col items-stretch;
+    }
+    
+    .filter-input, .filter-select {
+        @apply w-full;
+    }
+    
+    .filter-actions {
+        @apply flex-col;
+    }
+    
+    .courses-grid {
+        @apply grid-cols-1;
+    }
+    
+    .form-container {
+        @apply grid-cols-1;
+    }
+    
+    .detail-content {
+        @apply grid-cols-1;
+    }
+}

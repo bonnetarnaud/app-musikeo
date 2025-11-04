@@ -18,7 +18,7 @@ class InstrumentRental
     #[ORM\JoinColumn(nullable: false)]
     private ?Instrument $instrument = null;
 
-    #[ORM\ManyToOne(targetEntity: Student::class)]
+    #[ORM\ManyToOne(targetEntity: Student::class, inversedBy: 'instrumentRentals')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Student $student = null;
 

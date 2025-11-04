@@ -1,0 +1,250 @@
+{% extends 'app-layout/layout.html.twig' %}
+
+{% block title %}Gestion des salles - {{ organization.name }}{% endblock %}
+
+{% block main_content %}
+<div class="rooms-management">
+    <!-- Header -->
+    <div class="rooms-header">
+        <div class="rooms-header-content">
+            <div class="rooms-title-section">
+                <h1 class="rooms-title">
+                    <span class="rooms-icon">🏢</span>
+                    Gestion des salles
+                </h1>
+                <p class="rooms-subtitle">
+                    Gérez les salles et espaces de {{ organization.name }}
+                </p>
+            </div>
+            <div class="rooms-actions">
+                <a href="{{ path('app_room_new') }}" class="btn-primary">
+                    <span class="btn-icon">➕</span>
+                    Nouvelle salle
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="rooms-stats">
+        <div class="stat-card">
+            <div class="stat-icon">🏢</div>
+            <div class="stat-content">
+                <div class="stat-number">{{ rooms|length }}</div>
+                <div class="stat-label">Salles total</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-content">
+                <div class="stat-number">
+                    {% set totalCapacity = 0 %}
+                    {% for room in rooms %}
+                        {% set totalCapacity = totalCapacity + room.capacity %}
+                    {% endfor %}
+                    {{ totalCapacity }}
+                </div>
+                <div class="stat-label">Capacité totale</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">📅</div>
+            <div class="stat-content">
+                <div class="stat-number">
+                    {% set totalLessons = 0 %}
+                    {% for room in rooms %}
+                        {% set totalLessons = totalLessons + room.lessons|length %}
+                    {% endfor %}
+                    {{ totalLessons }}
+                </div>
+                <div class="stat-label">Leçons programmées</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-content">
+                <div class="stat-number">
+                    {% if rooms|length > 0 %}
+                        {% set totalCapacity = 0 %}
+                        {% for room in rooms %}
+                            {% set totalCapacity = totalCapacity + room.capacity %}
+                        {% endfor %}
+                        {{ (totalCapacity / rooms|length)|round(1) }}
+                    {% else %}
+                        0
+                    {% endif %}
+                </div>
+                <div class="stat-label">Capacité moyenne</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="rooms-filters">
+        <form method="GET" class="filters-form">
+            <div class="filter-group">
+                <label for="search" class="filter-label">Rechercher</label>
+                <input 
+                    type="text" 
+                    id="search" 
+                    name="search" 
+                    value="{{ search }}" 
+                    placeholder="Nom, localisation..."
+                    class="filter-input"
+                >
+            </div>
+            <div class="filter-group">
+                <label for="capacity" class="filter-label">Capacité</label>
+                <select id="capacity" name="capacity" class="filter-select">
+                    <option value="">Toutes les tailles</option>
+                    <option value="small" {{ capacity == 'small' ? 'selected' : '' }}>Petite (≤ 5 pers.)</option>
+                    <option value="medium" {{ capacity == 'medium' ? 'selected' : '' }}>Moyenne (6-15 pers.)</option>
+                    <option value="large" {{ capacity == 'large' ? 'selected' : '' }}>Grande (≥ 16 pers.)</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="availability" class="filter-label">Disponibilité</label>
+                <select id="availability" name="availability" class="filter-select">
+                    <option value="">Toutes les salles</option>
+                    <option value="available" {{ availability == 'available' ? 'selected' : '' }}>Disponible</option>
+                    <option value="busy" {{ availability == 'busy' ? 'selected' : '' }}>Très utilisée</option>
+                    <option value="empty" {{ availability == 'empty' ? 'selected' : '' }}>Inutilisée</option>
+                </select>
+            </div>
+            <div class="filter-actions">
+                <button type="submit" class="btn-filter">
+                    🔍 Filtrer
+                </button>
+                {% if search or capacity or availability %}
+                    <a href="{{ path('app_room_index') }}" class="btn-clear">
+                        ✖️ Effacer
+                    </a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+    <!-- Rooms Grid -->
+    <div class="rooms-content">
+        {% if rooms|length > 0 %}
+            <div class="rooms-grid">
+                {% for room in rooms %}
+                    <div class="room-card">
+                        <!-- Room Header -->
+                        <div class="room-header">
+                            <div class="room-info">
+                                <div class="room-icon">
+                                    {% if room.capacity <= 5 %}
+                                        🚪
+                                    {% elseif room.capacity <= 15 %}
+                                        🏠
+                                    {% else %}
+                                        🏢
+                                    {% endif %}
+                                </div>
+                                <div class="room-details">
+                                    <h3 class="room-name">{{ room.name }}</h3>
+                                    <div class="room-capacity">👥 {{ room.capacity }} personnes</div>
+                                    {% if room.location %}
+                                        <div class="room-location">📍 {{ room.location|slice(0, 50) }}{% if room.location|length > 50 %}...{% endif %}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="room-actions">
+                                <div class="dropdown">
+                                    <button class="dropdown-toggle" data-dropdown-toggle="room-menu-{{ room.id }}">
+                                        ⋮
+                                    </button>
+                                    <div class="dropdown-menu" id="room-menu-{{ room.id }}">
+                                        <a href="{{ path('app_room_show', {'id': room.id}) }}" class="dropdown-item">
+                                            👁️ Voir détails
+                                        </a>
+                                        <a href="{{ path('app_room_edit', {'id': room.id}) }}" class="dropdown-item">
+                                            ✏️ Modifier
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <form method="post" action="{{ path('app_room_delete', {'id': room.id}) }}" class="dropdown-form">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ room.id) }}">
+                                            <button type="submit" class="dropdown-item dropdown-item-danger" 
+                                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette salle ?')">
+                                                🗑️ Supprimer
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Room Stats -->
+                        <div class="room-stats">
+                            <div class="room-stat">
+                                <span class="stat-icon">📅</span>
+                                <span class="stat-text">{{ room.lessons|length }} leçon(s)</span>
+                            </div>
+                            <div class="room-stat">
+                                <span class="stat-icon">📊</span>
+                                <span class="stat-text">
+                                    {% if room.lessons|length == 0 %}
+                                        Inutilisée
+                                    {% elseif room.lessons|length < 5 %}
+                                        Disponible
+                                    {% else %}
+                                        Très utilisée
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Status Badge -->
+                        <div class="room-badges">
+                            {% if room.lessons|length == 0 %}
+                                <span class="status-badge status-empty">💤 Inutilisée</span>
+                            {% elseif room.lessons|length < 5 %}
+                                <span class="status-badge status-available">✅ Disponible</span>
+                            {% else %}
+                                <span class="status-badge status-busy">🔥 Très utilisée</span>
+                            {% endif %}
+                            
+                            {% if room.capacity <= 5 %}
+                                <span class="capacity-badge capacity-small">🚪 Petite</span>
+                            {% elseif room.capacity <= 15 %}
+                                <span class="capacity-badge capacity-medium">🏠 Moyenne</span>
+                            {% else %}
+                                <span class="capacity-badge capacity-large">🏢 Grande</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Room Footer -->
+                        <div class="room-footer">
+                            <a href="{{ path('app_room_show', {'id': room.id}) }}" class="btn-outline">
+                                Voir planning
+                            </a>
+                            <a href="{{ path('app_room_edit', {'id': room.id}) }}" class="btn-primary">
+                                Modifier
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">🏢</div>
+                <h3 class="empty-title">Aucune salle trouvée</h3>
+                <p class="empty-description">
+                    {% if search or capacity or availability %}
+                        Aucune salle ne correspond à vos critères de recherche.
+                    {% else %}
+                        Vous n'avez pas encore de salles configurées. Commencez par ajouter votre première salle.
+                    {% endif %}
+                </p>
+                {% if not search and not capacity and not availability %}
+                    <a href="{{ path('app_room_new') }}" class="btn-primary">
+                        <span class="btn-icon">➕</span>
+                        Ajouter la première salle
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

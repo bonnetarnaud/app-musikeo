@@ -41,14 +41,117 @@
 
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
-        <aside class="w-64 bg-gray-900 text-white flex flex-col">           
-            <!-- Header avec logo -->
-            <div class="p-6">
-                <p class="text-xs text-gray-400 mt-1">{{ app.user.organization.name }}</p>
+        <aside>           
+            <!-- Header avec logo et menu déroulant -->
+            <div class="sidebar-header">
+                <div class="sidebar-header-switcher">
+                    <div role="button">
+                        <span class="mr-2">
+                        {{ app.user.organization.name }}
+                        </span>
+                        <svg class="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="dropdown">
+                    <div class="dropdown-menu">
+                        <!-- Header utilisateur avec avatar -->
+                        <div class="dropdown-header">
+                            <div class="user-avatar">
+                                <div class="avatar-placeholder">
+                                    {{ app.user.firstname|first|upper }}{{ app.user.lastname|first|upper }}
+                                </div>
+                            </div>
+                            <div class="user-info">
+                                <div class="user-name">{{ app.user.firstname }} {{ app.user.lastname }}</div>
+                                <div class="user-role">
+                                    {% if 'ROLE_ADMIN' in app.user.roles %}
+                                        <span class="role-badge role-admin">Administrateur</span>
+                                    {% elseif 'ROLE_TEACHER' in app.user.roles %}
+                                        <span class="role-badge role-teacher">Enseignant</span>
+                                    {% elseif 'ROLE_STUDENT' in app.user.roles %}
+                                        <span class="role-badge role-student">Étudiant</span>
+                                    {% else %}
+                                        <span class="role-badge role-user">Utilisateur</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <nav class="">
+                            <a href="#" class="dropdown-item">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                                Mon profil
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                                Paramètres
+                            </a>
+                            <a href="{{ path('app_logout') }}" class="dropdown-item">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                </svg>
+                                Déconnexion
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+
+                <nav class="nav-menu mt-2">
+                    {% if 'ROLE_ADMIN' in app.user.roles %}
+                        <a href="{{ path('app_dashboard_admin') }}" class="nav-link {{ app.request.get('_route') == 'app_dashboard_admin' ? 'active' : '' }}">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                            </svg>
+                            Accueil
+                        </a>
+                    {% elseif 'ROLE_TEACHER' in app.user.roles %}
+                        <a href="{{ path('app_dashboard_teacher') }}" class="nav-link {{ app.request.get('_route') == 'app_dashboard_teacher' ? 'active' : '' }}">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                            </svg>
+                            Accueil
+                        </a>
+                    {% elseif 'ROLE_STUDENT' in app.user.roles %}
+                        <a href="{{ path('app_dashboard_student') }}" class="nav-link {{ app.request.get('_route') == 'app_dashboard_student' ? 'active' : '' }}">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                            </svg>
+                            Accueil
+                        </a>
+                    {% else %}
+                        <a href="{{ path('app_home') }}" class="nav-link {{ app.request.get('_route') == 'app_home' ? 'active' : '' }}">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                            </svg>
+                            Accueil
+                        </a>
+                    {% endif %}
+                    <a href="#" class="nav-link relative" onclick="toggleNotifications()">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 13.5h3.86a2.25 2.25 0 0 1 2.012 1.244l.256.512a2.25 2.25 0 0 0 2.013 1.244h3.218a2.25 2.25 0 0 0 2.013-1.244l.256-.512a2.25 2.25 0 0 1 2.013-1.244h3.859m-19.5.338V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 0 0-2.15-1.588H6.911a2.25 2.25 0 0 0-2.15 1.588L2.35 13.177a2.25 2.25 0 0 0-.1.661Z" />
+                        </svg>
+                        Boîte de réception
+
+                        
+                        <span class="absolute right-4 -translate-y-full flex h-3 w-3 top-1/2">
+                                <span class="absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-3 w-3 bg-red"></span>
+                            </span>
+                        
+                    </a>
+                </nav>
             </div>
 
             <!-- Navigation Menu -->
-            <nav class="flex-1 py-6">
+            <nav>
                 {% block sidebar_menu %}
                 <!-- Menu automatique selon le rôle -->
                 {% if 'ROLE_ADMIN' in app.user.roles %}
@@ -59,9 +162,9 @@
                     {% include 'app-layout/_sidebar-student.html.twig' %}
                 {% else %}
                     <!-- Menu par défaut -->
-                    <div class="space-y-2">
-                        <a href="/" class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors">
-                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="nav-menu">
+                        <a href="/" class="nav-link">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                             </svg>
                             Dashboard
@@ -70,26 +173,103 @@
                 {% endif %}
                 {% endblock %}
             </nav>
-
-            <!-- User Info & Logout -->
-            <div class="p-6 border-t border-gray-800">
-                <div class="flex items-center mb-4">
-                    <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center mr-3">
-                        <span class="text-sm font-medium">{{ app.user.firstname|first }}{{ app.user.lastname|first }}</span>
-                    </div>
-                    <div>
-                        <p class="text-sm font-medium">{{ app.user.firstname }} {{ app.user.lastname }}</p>
-                        <p class="text-xs text-gray-400">{{ app.user.organization.name }}</p>
-                    </div>
-                </div>
-                <a href="{{ path('app_logout') }}" class="flex items-center w-full px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition-colors">
-                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                    </svg>
-                    Déconnexion
-                </a>
-            </div>
         </aside>
+
+        <!-- Panneau de notifications -->
+        <div id="notifications-panel" class="notifications-panel">
+            <div class="notifications-header">
+                <button onclick="toggleNotifications()" class="close-btn">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="notifications-content">
+                {% if 'ROLE_ADMIN' in app.user.roles %}
+                    <!-- Notifications pour admin -->
+                    <div class="notification-category">
+                        <h4>Préinscriptions</h4>
+                        <div class="notification-item">
+                            <div class="notification-icon">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                            </div>
+                            <div class="notification-content">
+                                <p class="notification-title">3 nouvelles préinscriptions</p>
+                                <p class="notification-desc">En attente de validation</p>
+                                <span class="notification-time">Il y a 15 min</span>
+                            </div>
+                        </div>
+                        
+                        <div class="notification-item">
+                            <div class="notification-icon">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+                                </svg>
+                            </div>
+                            <div class="notification-content">
+                                <p class="notification-title">Demande de location d'instrument</p>
+                                <p class="notification-desc">Violon demandé par Marie Dupont</p>
+                                <span class="notification-time">Il y a 1h</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="notification-category">
+                        <h4>Système</h4>
+                        <div class="notification-item">
+                            <div class="notification-icon">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <div class="notification-content">
+                                <p class="notification-title">Rappel de paiement</p>
+                                <p class="notification-desc">5 paiements en retard</p>
+                                <span class="notification-time">Il y a 2h</span>
+                            </div>
+                        </div>
+                    </div>
+                {% elseif 'ROLE_TEACHER' in app.user.roles %}
+                    <!-- Notifications pour enseignant -->
+                    <div class="notification-category">
+                        <h4>Cours</h4>
+                        <div class="notification-item">
+                            <div class="notification-icon">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3M8 7v5a1 1 0 001 1h6a1 1 0 001-1V7"></path>
+                                </svg>
+                            </div>
+                            <div class="notification-content">
+                                <p class="notification-title">Cours annulé</p>
+                                <p class="notification-desc">Paul Martin - Piano débutant</p>
+                                <span class="notification-time">Il y a 30 min</span>
+                            </div>
+                        </div>
+                    </div>
+                {% elseif 'ROLE_STUDENT' in app.user.roles %}
+                    <!-- Notifications pour étudiant -->
+                    <div class="notification-category">
+                        <h4>Mes cours</h4>
+                        <div class="notification-item">
+                            <div class="notification-icon">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3M8 7v5a1 1 0 001 1h6a1 1 0 001-1V7"></path>
+                                </svg>
+                            </div>
+                            <div class="notification-content">
+                                <p class="notification-title">Prochain cours</p>
+                                <p class="notification-desc">Piano avec M. Durand demain à 14h</p>
+                                <span class="notification-time">Demain</span>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
 
         <!-- Main Content -->
         <main class="flex-1 overflow-auto">

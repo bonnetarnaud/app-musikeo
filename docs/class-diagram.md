@@ -39,42 +39,54 @@ classDiagram
     }
 
     class Teacher {
-        -speciality: string
+        -phone: string
         -biography: text
-        -hourlyRate: decimal
-        -isActive: boolean
+        -specialties: string
         +getRoles() array
-        +getActiveCourses() Collection
+        +getCourses() Collection
+        +addCourse() static
+        +removeCourse() static
     }
 
     class Student {
         -dateOfBirth: DateTime
-        -parentName: string
-        -parentEmail: string
-        -parentPhone: string
-        -level: string
-        -notes: text
+        -address: string
+        -phone: string
         +getRoles() array
         +getAge() int
-        +getActiveRentals() Collection
+        +getEnrollments() Collection
+        +getPayments() Collection
+        +getInstrumentRentals() Collection
+        +addEnrollment() static
+        +removeEnrollment() static
+        +addPayment() static
+        +removePayment() static
+        +addInstrumentRental() static
+        +removeInstrumentRental() static
     }
 
     class Instrument {
         -id: int
+        -name: string
         -type: string
         -description: text
+        -serialNumber: string
         -brand: string
         -model: string
-        -serialNumber: string
-        -condition: string
         -isRentable: boolean
         -isCurrentlyRented: boolean
+        -currentRenter: Student
+        -rentalStartDate: DateTime
         -additionalInfo: text
+        -condition: string
         +getConditionLabel() string
         +isAvailableForRent() boolean
         +getCurrentRental() InstrumentRental
         +rentTo() InstrumentRental
         +returnFromRent() void
+        +getRentalHistory() Collection
+        +addRentalHistory() static
+        +removeRentalHistory() static
     }
 
     class InstrumentRental {
@@ -94,8 +106,19 @@ classDiagram
         -id: int
         -name: string
         -description: text
+        -dayOfWeek: string
+        -startTime: time
+        -endTime: time
+        -maxStudents: int
         +getEnrollments() Collection
         +getLessons() Collection
+        +getStudents() Collection
+        +getEnrollmentCount() int
+        +getLessonCount() int
+        +addEnrollment() static
+        +removeEnrollment() static
+        +addLesson() static
+        +removeLesson() static
     }
 
     class Room {
@@ -117,20 +140,25 @@ classDiagram
 
     class Enrollment {
         -id: int
-        -dateEnrolled: DateTime
+        -enrollmentDate: DateTime
         -status: string
         +isActive() boolean
         +canAttendLesson() boolean
+        +getStatusLabel() string
+        +getStatusChoices() array
     }
 
     class Payment {
         -id: int
         -amount: decimal
-        -date: DateTime
-        -method: string
+        -paymentDate: DateTime
+        -paymentMethod: string
+        -status: string
         -description: string
         +getFormattedAmount() string
         +isRecent() boolean
+        +getMethodLabel() string
+        +getStatusLabel() string
     }
 
     %% Relations Multi-tenant
@@ -184,6 +212,29 @@ L'application est conçue comme un **SaaS multi-tenant** où chaque **école de 
 
 ## Évolutions Récentes
 
+### ✅ v2.2 - Système de Gestion des Élèves (Nov 2025)
+- **Interface complète de gestion des élèves** avec CRUD complet
+- **StudentController** : Sécurité admin et isolation par organisation
+- **StudentType** : Formulaire avec validation complète (email, nom, prénom, date de naissance, téléphone, adresse)
+- **Templates responsives** : Index avec grille, détail complet, formulaires de création/édition
+- **Fonctionnalités avancées** :
+  - Statistiques en temps réel (élèves, inscriptions actives, locations, paiements)
+  - Système de recherche multi-champs (nom, prénom, email, téléphone)
+  - Filtres par statut (inscriptions actives, locations actives, paiements récents)
+  - Validation des contraintes avant suppression
+- **Navigation hiérarchique** : Menu "Élèves" avec sous-menu "Préinscriptions"
+- **Intégration complète** avec les cours, instruments et paiements
+
+### ✅ v2.1 - Gestion Complète des Cours (Nov 2025)
+- **Interface d'administration complète** pour la gestion des cours
+- **CRUD complet** : Création, consultation, modification, suppression des cours
+- **Système de recherche et filtres** par nom, professeur, description
+- **Statistiques avancées** : nombre d'élèves, leçons programmées par cours
+- **Validation des contraintes** : impossible de supprimer un cours avec inscriptions/leçons
+- **Templates responsives** avec interface moderne TailwindCSS
+- **Attribution flexible des professeurs** avec gestion des changements
+- **Navigation intégrée** dans le menu administrateur
+
 ### ✅ v2.0 - Transformation Inventaire (Nov 2025)
 - **Restructuration complète** de l'entité `Instrument`
 - Passage d'un **catalogue académique** à un **inventaire physique**
@@ -207,13 +258,25 @@ L'application est conçue comme un **SaaS multi-tenant** où chaque **école de 
 ### 🔄 Dashboard Student
 - Interface étudiante pour consulter cours et locations
 - Historique des paiements et planning personnel
+- Gestion du profil étudiant
 
-### 🔄 Interface de Gestion d'Inventaire
-- CRUD complet pour les instruments
-- Gestion des locations/retours
-- Statistiques d'utilisation du matériel
+### 🔄 Gestion Avancée du Planning
+- Interface de planification des leçons
+- Calendrier intégré pour visualiser les cours
+- Gestion des conflits d'horaires et salles
+
+### 🔄 Interface de Gestion d'Inventaire Avancée
+- Dashboard d'inventaire avec statistiques d'utilisation
+- Gestion des retours d'instruments en retard
+- Maintenance et réparations
 
 ### 🔄 Système de Notifications
 - Alertes pour retours d'instruments en retard
 - Notifications de paiements
 - Rappels de cours
+- Notifications par email/SMS
+
+### 🔄 Gestion des Préinscriptions
+- Système de préinscriptions en ligne
+- Validation des demandes d'inscription
+- Workflow d'admission des élèves

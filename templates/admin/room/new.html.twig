@@ -1,0 +1,203 @@
+{% extends 'app-layout/layout.html.twig' %}
+
+{% block title %}Nouvelle salle - {{ organization.name }}{% endblock %}
+
+{% block main_content %}
+<div class="room-form-page">
+    <!-- Header -->
+    <div class="form-header">
+        <div class="form-header-content">
+            <div class="form-navigation">
+                <a href="{{ path('app_room_index') }}" class="back-link">
+                    ← Retour aux salles
+                </a>
+            </div>
+            <div class="form-title-section">
+                <h1 class="form-title">
+                    <span class="form-icon">➕</span>
+                    Nouvelle salle
+                </h1>
+                <p class="form-subtitle">
+                    Ajoutez une nouvelle salle à {{ organization.name }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Content -->
+    <div class="form-content">
+        <div class="form-container">
+            {{ form_start(form, {'attr': {'class': 'room-form', 'novalidate': 'novalidate'}}) }}
+            
+            <!-- Basic Information Section -->
+            <div class="form-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">ℹ️</span>
+                        Informations de base
+                    </h2>
+                    <p class="section-description">
+                        Renseignez les informations essentielles de la salle
+                    </p>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group form-group-full">
+                        {{ form_label(form.name, 'Nom de la salle *', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.name, {'attr': {'class': 'form-input', 'placeholder': 'Ex: Salle de piano A1'}}) }}
+                        {{ form_errors(form.name) }}
+                        <div class="form-help">
+                            Donnez un nom descriptif et unique à cette salle
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ form_label(form.capacity, 'Capacité *', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.capacity, {'attr': {'class': 'form-input', 'placeholder': 'Ex: 8'}}) }}
+                        {{ form_errors(form.capacity) }}
+                        <div class="form-help">
+                            Nombre maximum de personnes pouvant utiliser la salle
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Location Section -->
+            <div class="form-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">📍</span>
+                        Localisation et équipements
+                    </h2>
+                    <p class="section-description">
+                        Décrivez l'emplacement et les équipements disponibles
+                    </p>
+                </div>
+                
+                <div class="form-group">
+                    {{ form_label(form.location, 'Description de la salle', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.location, {'attr': {'class': 'form-textarea', 'placeholder': 'Ex: Bâtiment A, 1er étage, porte 101\nÉquipée d\'un piano droit Yamaha\nTableau, chaises, estrade', 'rows': 4}}) }}
+                    {{ form_errors(form.location) }}
+                    <div class="form-help">
+                        Indiquez l'emplacement exact et les équipements disponibles dans cette salle
+                    </div>
+                </div>
+            </div>
+
+            <!-- Capacity Guide -->
+            <div class="form-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">💡</span>
+                        Guide des capacités
+                    </h2>
+                    <p class="section-description">
+                        Exemples de capacités selon le type de salle
+                    </p>
+                </div>
+                
+                <div class="capacity-guide">
+                    <div class="capacity-item">
+                        <div class="capacity-icon">🚪</div>
+                        <div class="capacity-content">
+                            <div class="capacity-title">Petite salle (1-5 personnes)</div>
+                            <div class="capacity-description">Cours individuels, petits groupes, practice rooms</div>
+                        </div>
+                    </div>
+                    <div class="capacity-item">
+                        <div class="capacity-icon">🏠</div>
+                        <div class="capacity-content">
+                            <div class="capacity-title">Salle moyenne (6-15 personnes)</div>
+                            <div class="capacity-description">Cours de groupe, ensembles de chambre, ateliers</div>
+                        </div>
+                    </div>
+                    <div class="capacity-item">
+                        <div class="capacity-icon">🏢</div>
+                        <div class="capacity-content">
+                            <div class="capacity-title">Grande salle (16+ personnes)</div>
+                            <div class="capacity-description">Orchestres, concerts, conférences, événements</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <div class="form-actions-content">
+                    <a href="{{ path('app_room_index') }}" class="btn-outline">
+                        Annuler
+                    </a>
+                    <button type="submit" class="btn-primary">
+                        <span class="btn-icon">💾</span>
+                        Créer la salle
+                    </button>
+                </div>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+
+        <!-- Form Help -->
+        <div class="form-sidebar">
+            <div class="help-card">
+                <div class="help-header">
+                    <h3 class="help-title">💡 Conseils</h3>
+                </div>
+                <div class="help-content">
+                    <div class="help-item">
+                        <strong>Nom unique :</strong>
+                        Utilisez un nom facile à identifier et à retenir pour vos utilisateurs.
+                    </div>
+                    <div class="help-item">
+                        <strong>Capacité réaliste :</strong>
+                        Tenez compte de l'espace nécessaire pour les instruments et la circulation.
+                    </div>
+                    <div class="help-item">
+                        <strong>Description détaillée :</strong>
+                        Plus vous donnez d'informations, plus il sera facile de planifier les cours.
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-card">
+                <div class="help-header">
+                    <h3 class="help-title">📋 Exemples</h3>
+                </div>
+                <div class="help-content">
+                    <div class="help-example">
+                        <strong>Salle de piano :</strong>
+                        <br>Nom: "Piano Studio A"
+                        <br>Capacité: 4 personnes
+                        <br>Description: "Piano à queue Steinway, bancs réglables, insonorisation"
+                    </div>
+                    <div class="help-example">
+                        <strong>Salle de groupe :</strong>
+                        <br>Nom: "Ensemble Room 1"
+                        <br>Capacité: 12 personnes
+                        <br>Description: "Chaises mobiles, pupitres, système audio, grand espace"
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-card">
+                <div class="help-header">
+                    <h3 class="help-title">📊 Statistiques</h3>
+                </div>
+                <div class="help-content">
+                    <div class="help-stat">
+                        <strong>Capacité moyenne :</strong>
+                        {% set totalCapacity = 0 %}
+                        {% set roomCount = 0 %}
+                        {# Cette logique serait idéalement dans le contrôleur #}
+                        8 personnes
+                    </div>
+                    <div class="help-stat">
+                        <strong>Type le plus commun :</strong>
+                        Salles moyennes (6-15 pers.)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

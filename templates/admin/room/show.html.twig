@@ -1,0 +1,333 @@
+{% extends 'app-layout/layout.html.twig' %}
+
+{% block title %}{{ room.name }} - Salle{% endblock %}
+
+{% block main_content %}
+<div class="room-detail">
+    <!-- Header -->
+    <div class="room-detail-header">
+        <div class="room-detail-header-content">
+            <div class="room-detail-navigation">
+                <a href="{{ path('app_room_index') }}" class="back-link">
+                    ← Retour aux salles
+                </a>
+            </div>
+            <div class="room-detail-title-section">
+                <div class="room-detail-icon">
+                    {% if room.capacity <= 5 %}
+                        🚪
+                    {% elseif room.capacity <= 15 %}
+                        🏠
+                    {% else %}
+                        🏢
+                    {% endif %}
+                </div>
+                <div class="room-detail-info">
+                    <h1 class="room-detail-title">{{ room.name }}</h1>
+                    <div class="room-detail-subtitle">
+                        Salle • {{ organization.name }}
+                    </div>
+                    <div class="room-detail-specs">
+                        <span class="spec-capacity">👥 {{ room.capacity }} personnes</span>
+                        {% if room.location %}
+                            <span class="spec-location">📍 {{ room.location|split('\n')[0] }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="room-detail-actions">
+                <a href="{{ path('app_room_edit', {'id': room.id}) }}" class="btn-primary">
+                    ✏️ Modifier
+                </a>
+                <div class="dropdown">
+                    <button class="dropdown-toggle btn-outline" data-dropdown-toggle="room-actions">
+                        ⋮ Actions
+                    </button>
+                    <div class="dropdown-menu" id="room-actions">
+                        <a href="{{ path('app_room_edit', {'id': room.id}) }}" class="dropdown-item">
+                            ✏️ Modifier la salle
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <form method="post" action="{{ path('app_room_delete', {'id': room.id}) }}" class="dropdown-form">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ room.id) }}">
+                            <button type="submit" class="dropdown-item dropdown-item-danger" 
+                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette salle ?')">
+                                🗑️ Supprimer
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="room-detail-content">
+        <!-- Overview Stats -->
+        <div class="room-overview">
+            <div class="overview-card">
+                <div class="overview-icon">👥</div>
+                <div class="overview-content">
+                    <div class="overview-number">{{ room.capacity }}</div>
+                    <div class="overview-label">Capacité</div>
+                </div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-icon">📅</div>
+                <div class="overview-content">
+                    <div class="overview-number">{{ room.lessons|length }}</div>
+                    <div class="overview-label">Leçons programmées</div>
+                </div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-icon">📊</div>
+                <div class="overview-content">
+                    <div class="overview-number">
+                        {% if room.lessons|length == 0 %}
+                            0%
+                        {% else %}
+                            {{ ((room.lessons|length / 20) * 100)|round }}%
+                        {% endif %}
+                    </div>
+                    <div class="overview-label">Taux d'utilisation</div>
+                </div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-icon">
+                    {% if room.lessons|length == 0 %}
+                        💤
+                    {% elseif room.lessons|length < 5 %}
+                        ✅
+                    {% else %}
+                        🔥
+                    {% endif %}
+                </div>
+                <div class="overview-content">
+                    <div class="overview-number">
+                        {% if room.lessons|length == 0 %}
+                            Libre
+                        {% elseif room.lessons|length < 5 %}
+                            Dispo
+                        {% else %}
+                            Occupée
+                        {% endif %}
+                    </div>
+                    <div class="overview-label">Statut</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="room-detail-grid">
+            <!-- Room Information -->
+            <div class="detail-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">ℹ️</span>
+                        Informations de la salle
+                    </h2>
+                </div>
+                <div class="section-content">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label class="info-label">Nom</label>
+                            <div class="info-value">{{ room.name }}</div>
+                        </div>
+                        <div class="info-item">
+                            <label class="info-label">Capacité</label>
+                            <div class="info-value">{{ room.capacity }} personnes</div>
+                        </div>
+                        <div class="info-item info-item-full">
+                            <label class="info-label">Localisation / Description</label>
+                            <div class="info-value">
+                                {% if room.location %}
+                                    {{ room.location|nl2br }}
+                                {% else %}
+                                    <span class="text-muted">Non renseignée</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lessons Schedule -->
+            <div class="detail-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">📅</span>
+                        Planning des leçons ({{ room.lessons|length }})
+                    </h2>
+                </div>
+                <div class="section-content">
+                    {% if room.lessons|length > 0 %}
+                        <div class="lessons-list">
+                            {% for lesson in room.lessons|slice(0, 10) %}
+                                <div class="lesson-item">
+                                    <div class="lesson-info">
+                                        <div class="lesson-title">
+                                            {% if lesson.course %}
+                                                {{ lesson.course.name }}
+                                            {% else %}
+                                                Leçon individuelle
+                                            {% endif %}
+                                        </div>
+                                        <div class="lesson-details">
+                                            <span class="lesson-datetime">
+                                                🕐 {{ lesson.startDatetime|date('d/m/Y H:i') }}
+                                                - {{ lesson.endDatetime|date('H:i') }}
+                                            </span>
+                                            {% if lesson.course and lesson.course.teacher %}
+                                                <span class="lesson-teacher">
+                                                    👩‍🏫 {{ lesson.course.teacher.fullName }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="lesson-status">
+                                        {% set lessonDate = lesson.startDatetime|date('Y-m-d') %}
+                                        {% set today = 'now'|date('Y-m-d') %}
+                                        {% if lessonDate == today %}
+                                            <span class="status-badge status-today">📍 Aujourd'hui</span>
+                                        {% elseif lessonDate > today %}
+                                            <span class="status-badge status-upcoming">⏰ À venir</span>
+                                        {% else %}
+                                            <span class="status-badge status-past">✅ Passée</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            {% if room.lessons|length > 10 %}
+                                <div class="lessons-more">
+                                    <span class="text-muted">+ {{ room.lessons|length - 10 }} autres leçons</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <div class="empty-state-small">
+                            <div class="empty-icon-small">📅</div>
+                            <div class="empty-text">Aucune leçon programmée</div>
+                            <div class="empty-help">Cette salle est disponible pour de nouvelles leçons</div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Usage Statistics -->
+            <div class="detail-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">📊</span>
+                        Statistiques d'utilisation
+                    </h2>
+                </div>
+                <div class="section-content">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-icon">📅</div>
+                            <div class="stat-content">
+                                <div class="stat-number">{{ room.lessons|length }}</div>
+                                <div class="stat-label">Leçons totales</div>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">⏰</div>
+                            <div class="stat-content">
+                                <div class="stat-number">
+                                    {% set totalHours = 0 %}
+                                    {% for lesson in room.lessons %}
+                                        {% set duration = (lesson.endDatetime.timestamp - lesson.startDatetime.timestamp) / 3600 %}
+                                        {% set totalHours = totalHours + duration %}
+                                    {% endfor %}
+                                    {{ totalHours|round(1) }}h
+                                </div>
+                                <div class="stat-label">Temps total</div>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">👥</div>
+                            <div class="stat-content">
+                                <div class="stat-number">
+                                    {% if room.lessons|length > 0 %}
+                                        {{ (totalHours / room.lessons|length)|round(1) }}h
+                                    {% else %}
+                                        0h
+                                    {% endif %}
+                                </div>
+                                <div class="stat-label">Durée moyenne</div>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">📈</div>
+                            <div class="stat-content">
+                                <div class="stat-number">
+                                    {% if room.lessons|length == 0 %}
+                                        Libre
+                                    {% elseif room.lessons|length < 3 %}
+                                        Faible
+                                    {% elseif room.lessons|length < 8 %}
+                                        Modérée
+                                    {% else %}
+                                        Élevée
+                                    {% endif %}
+                                </div>
+                                <div class="stat-label">Utilisation</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="detail-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">⚡</span>
+                        Actions rapides
+                    </h2>
+                </div>
+                <div class="section-content">
+                    <div class="actions-grid">
+                        <a href="{{ path('app_room_edit', {'id': room.id}) }}" class="action-card">
+                            <div class="action-icon">✏️</div>
+                            <div class="action-content">
+                                <div class="action-title">Modifier la salle</div>
+                                <div class="action-description">Changer nom, capacité ou localisation</div>
+                            </div>
+                        </a>
+                        
+                        <div class="action-card action-disabled">
+                            <div class="action-icon">📅</div>
+                            <div class="action-content">
+                                <div class="action-title">Programmer une leçon</div>
+                                <div class="action-description">Réserver cette salle (bientôt disponible)</div>
+                            </div>
+                        </div>
+                        
+                        <div class="action-card action-disabled">
+                            <div class="action-icon">📊</div>
+                            <div class="action-content">
+                                <div class="action-title">Voir le planning complet</div>
+                                <div class="action-description">Calendrier détaillé (bientôt disponible)</div>
+                            </div>
+                        </div>
+                        
+                        {% if room.lessons|length == 0 %}
+                            <form method="post" action="{{ path('app_room_delete', {'id': room.id}) }}" class="action-card action-danger">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ room.id) }}">
+                                <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette salle ?')" class="action-button">
+                                    <div class="action-icon">🗑️</div>
+                                    <div class="action-content">
+                                        <div class="action-title">Supprimer la salle</div>
+                                        <div class="action-description">Suppression définitive</div>
+                                    </div>
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

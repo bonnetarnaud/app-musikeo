@@ -1,0 +1,326 @@
+{% extends 'app-layout/layout.html.twig' %}
+
+{% block title %}{{ student.fullName }} - Élève{% endblock %}
+
+{% block main_content %}
+<div class="student-detail">
+    <!-- Header -->
+    <div class="student-detail-header">
+        <div class="student-detail-header-content">
+            <div class="student-detail-navigation">
+                <a href="{{ path('app_student_index') }}" class="back-link">
+                    ← Retour aux élèves
+                </a>
+            </div>
+            <div class="student-detail-title-section">
+                <div class="student-detail-avatar">
+                    {{ student.firstname|first|upper }}{{ student.lastname|first|upper }}
+                </div>
+                <div class="student-detail-info">
+                    <h1 class="student-detail-title">{{ student.fullName }}</h1>
+                    <div class="student-detail-subtitle">
+                        Élève • {{ organization.name }}
+                    </div>
+                    <div class="student-detail-contact">
+                        <span class="contact-email">📧 {{ student.email }}</span>
+                        {% if student.phone %}
+                            <span class="contact-phone">📞 {{ student.phone }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="student-detail-actions">
+                <a href="{{ path('app_student_edit', {'id': student.id}) }}" class="btn-primary">
+                    ✏️ Modifier
+                </a>
+                <div class="dropdown">
+                    <button class="dropdown-toggle btn-outline" data-dropdown-toggle="student-actions">
+                        ⋮ Actions
+                    </button>
+                    <div class="dropdown-menu" id="student-actions">
+                        <a href="{{ path('app_student_edit', {'id': student.id}) }}" class="dropdown-item">
+                            ✏️ Modifier l'élève
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <form method="post" action="{{ path('app_student_delete', {'id': student.id}) }}" class="dropdown-form">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ student.id) }}">
+                            <button type="submit" class="dropdown-item dropdown-item-danger" 
+                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet élève ?')">
+                                🗑️ Supprimer
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="student-detail-content">
+        <!-- Overview Stats -->
+        <div class="student-overview">
+            <div class="overview-card">
+                <div class="overview-icon">📚</div>
+                <div class="overview-content">
+                    <div class="overview-number">{{ student.enrollments|length }}</div>
+                    <div class="overview-label">Cours inscrits</div>
+                </div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-icon">🎵</div>
+                <div class="overview-content">
+                    <div class="overview-number">{{ student.instrumentRentals|length }}</div>
+                    <div class="overview-label">Instruments loués</div>
+                </div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-icon">💰</div>
+                <div class="overview-content">
+                    <div class="overview-number">{{ student.payments|length }}</div>
+                    <div class="overview-label">Paiements</div>
+                </div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-icon">🎂</div>
+                <div class="overview-content">
+                    <div class="overview-number">
+                        {% if student.dateOfBirth %}
+                            {{ 'now'|date('Y') - student.dateOfBirth|date('Y') }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </div>
+                    <div class="overview-label">Âge</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="student-detail-grid">
+            <!-- Personal Information -->
+            <div class="detail-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">👤</span>
+                        Informations personnelles
+                    </h2>
+                </div>
+                <div class="section-content">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label class="info-label">Prénom</label>
+                            <div class="info-value">{{ student.firstname }}</div>
+                        </div>
+                        <div class="info-item">
+                            <label class="info-label">Nom</label>
+                            <div class="info-value">{{ student.lastname }}</div>
+                        </div>
+                        <div class="info-item">
+                            <label class="info-label">Email</label>
+                            <div class="info-value">
+                                <a href="mailto:{{ student.email }}" class="email-link">{{ student.email }}</a>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <label class="info-label">Téléphone</label>
+                            <div class="info-value">
+                                {% if student.phone %}
+                                    <a href="tel:{{ student.phone }}" class="phone-link">{{ student.phone }}</a>
+                                {% else %}
+                                    <span class="text-muted">Non renseigné</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <label class="info-label">Date de naissance</label>
+                            <div class="info-value">
+                                {% if student.dateOfBirth %}
+                                    {{ student.dateOfBirth|date('d/m/Y') }}
+                                    <span class="text-muted">({{ 'now'|date('Y') - student.dateOfBirth|date('Y') }} ans)</span>
+                                {% else %}
+                                    <span class="text-muted">Non renseignée</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="info-item info-item-full">
+                            <label class="info-label">Adresse</label>
+                            <div class="info-value">
+                                {% if student.address %}
+                                    {{ student.address|nl2br }}
+                                {% else %}
+                                    <span class="text-muted">Non renseignée</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enrollments -->
+            <div class="detail-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">📚</span>
+                        Inscriptions aux cours ({{ student.enrollments|length }})
+                    </h2>
+                </div>
+                <div class="section-content">
+                    {% if student.enrollments|length > 0 %}
+                        <div class="enrollments-list">
+                            {% for enrollment in student.enrollments %}
+                                <div class="enrollment-item">
+                                    <div class="enrollment-info">
+                                        <div class="enrollment-course">{{ enrollment.course.name }}</div>
+                                        <div class="enrollment-details">
+                                            <span class="enrollment-schedule">
+                                                🕐 {{ enrollment.course.dayOfWeek|title }} {{ enrollment.course.startTime|date('H:i') }}
+                                            </span>
+                                            <span class="enrollment-teacher">
+                                                👩‍🏫 {{ enrollment.course.teacher.fullName }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="enrollment-status">
+                                        <span class="status-badge status-{{ enrollment.status }}">
+                                            {% if enrollment.status == 'valide' %}
+                                                ✅ Validé
+                                            {% elseif enrollment.status == 'en_attente' %}
+                                                ⏳ En attente
+                                            {% elseif enrollment.status == 'annule' %}
+                                                ❌ Annulé
+                                            {% else %}
+                                                {{ enrollment.status }}
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="empty-state-small">
+                            <div class="empty-icon-small">📚</div>
+                            <div class="empty-text">Aucune inscription</div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Instrument Rentals -->
+            <div class="detail-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">🎵</span>
+                        Locations d'instruments ({{ student.instrumentRentals|length }})
+                    </h2>
+                </div>
+                <div class="section-content">
+                    {% if student.instrumentRentals|length > 0 %}
+                        <div class="rentals-list">
+                            {% for rental in student.instrumentRentals %}
+                                <div class="rental-item">
+                                    <div class="rental-info">
+                                        <div class="rental-instrument">{{ rental.instrument.name }}</div>
+                                        <div class="rental-details">
+                                            <span class="rental-dates">
+                                                📅 Du {{ rental.startDate|date('d/m/Y') }}
+                                                {% if rental.endDate %}
+                                                    au {{ rental.endDate|date('d/m/Y') }}
+                                                {% else %}
+                                                    (en cours)
+                                                {% endif %}
+                                            </span>
+                                            <span class="rental-price">
+                                                💰 {{ rental.monthlyPrice }}€/mois
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="rental-status">
+                                        <span class="status-badge status-{{ rental.status }}">
+                                            {% if rental.status == 'active' %}
+                                                ✅ Active
+                                            {% elseif rental.status == 'ended' %}
+                                                🔚 Terminée
+                                            {% elseif rental.status == 'cancelled' %}
+                                                ❌ Annulée
+                                            {% else %}
+                                                {{ rental.status }}
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="empty-state-small">
+                            <div class="empty-icon-small">🎵</div>
+                            <div class="empty-text">Aucune location</div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Payments -->
+            <div class="detail-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">💰</span>
+                        Historique des paiements ({{ student.payments|length }})
+                    </h2>
+                </div>
+                <div class="section-content">
+                    {% if student.payments|length > 0 %}
+                        <div class="payments-list">
+                            {% for payment in student.payments|slice(0, 5) %}
+                                <div class="payment-item">
+                                    <div class="payment-info">
+                                        <div class="payment-amount">{{ payment.amount }}€</div>
+                                        <div class="payment-details">
+                                            <span class="payment-date">📅 {{ payment.paymentDate|date('d/m/Y') }}</span>
+                                            <span class="payment-method">
+                                                {% if payment.paymentMethod == 'card' %}
+                                                    💳 Carte bancaire
+                                                {% elseif payment.paymentMethod == 'transfer' %}
+                                                    🏦 Virement
+                                                {% elseif payment.paymentMethod == 'cash' %}
+                                                    💵 Espèces
+                                                {% elseif payment.paymentMethod == 'check' %}
+                                                    📋 Chèque
+                                                {% else %}
+                                                    {{ payment.paymentMethod }}
+                                                {% endif %}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="payment-status">
+                                        <span class="status-badge status-{{ payment.status }}">
+                                            {% if payment.status == 'confirmed' %}
+                                                ✅ Confirmé
+                                            {% elseif payment.status == 'pending' %}
+                                                ⏳ En attente
+                                            {% elseif payment.status == 'failed' %}
+                                                ❌ Échoué
+                                            {% else %}
+                                                {{ payment.status }}
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            {% if student.payments|length > 5 %}
+                                <div class="payments-more">
+                                    <span class="text-muted">+ {{ student.payments|length - 5 }} autres paiements</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <div class="empty-state-small">
+                            <div class="empty-icon-small">💰</div>
+                            <div class="empty-text">Aucun paiement</div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

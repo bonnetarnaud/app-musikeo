@@ -1,0 +1,244 @@
+{% extends 'app-layout/layout.html.twig' %}
+
+{% block title %}Gestion des élèves - {{ organization.name }}{% endblock %}
+
+{% block main_content %}
+<div class="students-management">
+    <!-- Header -->
+    <div class="students-header">
+        <div class="students-header-content">
+            <div class="students-title-section">
+                <h1 class="students-title">
+                    <span class="students-icon">👥</span>
+                    Gestion des élèves
+                </h1>
+                <p class="students-subtitle">
+                    Gérez les élèves inscrits dans {{ organization.name }}
+                </p>
+            </div>
+            <div class="students-actions">
+                <a href="{{ path('app_student_new') }}" class="btn-primary">
+                    <span class="btn-icon">➕</span>
+                    Nouvel élève
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="students-stats">
+        <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-content">
+                <div class="stat-number">{{ students|length }}</div>
+                <div class="stat-label">Élèves total</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-content">
+                <div class="stat-number">
+                    {% set activeEnrollments = 0 %}
+                    {% for student in students %}
+                        {% for enrollment in student.enrollments %}
+                            {% if enrollment.status == 'valide' %}
+                                {% set activeEnrollments = activeEnrollments + 1 %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                    {{ activeEnrollments }}
+                </div>
+                <div class="stat-label">Inscriptions actives</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🎵</div>
+            <div class="stat-content">
+                <div class="stat-number">
+                    {% set activeRentals = 0 %}
+                    {% for student in students %}
+                        {% for rental in student.instrumentRentals %}
+                            {% if rental.status == 'active' %}
+                                {% set activeRentals = activeRentals + 1 %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                    {{ activeRentals }}
+                </div>
+                <div class="stat-label">Locations actives</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">💰</div>
+            <div class="stat-content">
+                <div class="stat-number">
+                    {% set totalPayments = 0 %}
+                    {% for student in students %}
+                        {% set totalPayments = totalPayments + student.payments|length %}
+                    {% endfor %}
+                    {{ totalPayments }}
+                </div>
+                <div class="stat-label">Paiements enregistrés</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="students-filters">
+        <form method="GET" class="filters-form">
+            <div class="filter-group">
+                <label for="search" class="filter-label">Rechercher</label>
+                <input 
+                    type="text" 
+                    id="search" 
+                    name="search" 
+                    value="{{ search }}" 
+                    placeholder="Nom, prénom, email, téléphone..."
+                    class="filter-input"
+                >
+            </div>
+            <div class="filter-group">
+                <label for="status" class="filter-label">Statut</label>
+                <select id="status" name="status" class="filter-select">
+                    <option value="">Tous les élèves</option>
+                    <option value="active_enrollments" {{ status == 'active_enrollments' ? 'selected' : '' }}>Inscriptions actives</option>
+                    <option value="active_rentals" {{ status == 'active_rentals' ? 'selected' : '' }}>Locations actives</option>
+                    <option value="recent_payments" {{ status == 'recent_payments' ? 'selected' : '' }}>Paiements récents</option>
+                </select>
+            </div>
+            <div class="filter-actions">
+                <button type="submit" class="btn-filter">
+                    🔍 Filtrer
+                </button>
+                {% if search or status %}
+                    <a href="{{ path('app_student_index') }}" class="btn-clear">
+                        ✖️ Effacer
+                    </a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+    <!-- Students Grid -->
+    <div class="students-content">
+        {% if students|length > 0 %}
+            <div class="students-grid">
+                {% for student in students %}
+                    <div class="student-card">
+                        <!-- Student Header -->
+                        <div class="student-header">
+                            <div class="student-info">
+                                <div class="student-avatar">
+                                    {{ student.firstname|first|upper }}{{ student.lastname|first|upper }}
+                                </div>
+                                <div class="student-details">
+                                    <h3 class="student-name">{{ student.fullName }}</h3>
+                                    <div class="student-email">{{ student.email }}</div>
+                                    {% if student.phone %}
+                                        <div class="student-phone">📞 {{ student.phone }}</div>
+                                    {% endif %}
+                                    {% if student.dateOfBirth %}
+                                        <div class="student-age">
+                                            🎂 {{ 'now'|date('Y') - student.dateOfBirth|date('Y') }} ans
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="student-actions">
+                                <div class="dropdown">
+                                    <button class="dropdown-toggle" data-dropdown-toggle="student-menu-{{ student.id }}">
+                                        ⋮
+                                    </button>
+                                    <div class="dropdown-menu" id="student-menu-{{ student.id }}">
+                                        <a href="{{ path('app_student_show', {'id': student.id}) }}" class="dropdown-item">
+                                            👁️ Voir détails
+                                        </a>
+                                        <a href="{{ path('app_student_edit', {'id': student.id}) }}" class="dropdown-item">
+                                            ✏️ Modifier
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <form method="post" action="{{ path('app_student_delete', {'id': student.id}) }}" class="dropdown-form">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ student.id) }}">
+                                            <button type="submit" class="dropdown-item dropdown-item-danger" 
+                                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet élève ?')">
+                                                🗑️ Supprimer
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Student Stats -->
+                        <div class="student-stats">
+                            <div class="student-stat">
+                                <span class="stat-icon">📚</span>
+                                <span class="stat-text">{{ student.enrollments|length }} cours</span>
+                            </div>
+                            <div class="student-stat">
+                                <span class="stat-icon">🎵</span>
+                                <span class="stat-text">{{ student.instrumentRentals|length }} instrument(s)</span>
+                            </div>
+                            <div class="student-stat">
+                                <span class="stat-icon">💰</span>
+                                <span class="stat-text">{{ student.payments|length }} paiement(s)</span>
+                            </div>
+                        </div>
+
+                        <!-- Status Badges -->
+                        <div class="student-badges">
+                            {% set hasActiveEnrollment = false %}
+                            {% set hasActiveRental = false %}
+                            {% for enrollment in student.enrollments %}
+                                {% if enrollment.status == 'valide' %}
+                                    {% set hasActiveEnrollment = true %}
+                                {% endif %}
+                            {% endfor %}
+                            {% for rental in student.instrumentRentals %}
+                                {% if rental.status == 'active' %}
+                                    {% set hasActiveRental = true %}
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if hasActiveEnrollment %}
+                                <span class="status-badge status-active">✅ Inscrit</span>
+                            {% endif %}
+                            {% if hasActiveRental %}
+                                <span class="status-badge status-rental">🎵 Location</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Student Footer -->
+                        <div class="student-footer">
+                            <a href="{{ path('app_student_show', {'id': student.id}) }}" class="btn-outline">
+                                Voir profil
+                            </a>
+                            <a href="{{ path('app_student_edit', {'id': student.id}) }}" class="btn-primary">
+                                Modifier
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">👥</div>
+                <h3 class="empty-title">Aucun élève trouvé</h3>
+                <p class="empty-description">
+                    {% if search or status %}
+                        Aucun élève ne correspond à vos critères de recherche.
+                    {% else %}
+                        Vous n'avez pas encore d'élèves inscrits. Commencez par ajouter votre premier élève.
+                    {% endif %}
+                </p>
+                {% if not search and not status %}
+                    <a href="{{ path('app_student_new') }}" class="btn-primary">
+                        <span class="btn-icon">➕</span>
+                        Ajouter le premier élève
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

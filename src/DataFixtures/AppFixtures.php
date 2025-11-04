@@ -87,7 +87,15 @@ class AppFixtures extends Fixture
         // Clean existing data
         $connection = $manager->getConnection();
         
-        $connection->executeStatement('SET FOREIGN_KEY_CHECKS = 0');
+        // For SQLite, we need to use PRAGMA instead of SET FOREIGN_KEY_CHECKS
+        $platform = $connection->getDatabasePlatform()->getName();
+        
+        if ($platform === 'mysql') {
+            $connection->executeStatement('SET FOREIGN_KEY_CHECKS = 0');
+        } else {
+            $connection->executeStatement('PRAGMA foreign_keys = OFF');
+        }
+        
         $connection->executeStatement('DELETE FROM payment');
         $connection->executeStatement('DELETE FROM lesson');
         $connection->executeStatement('DELETE FROM enrollment');
@@ -100,7 +108,12 @@ class AppFixtures extends Fixture
         $connection->executeStatement('DELETE FROM room');
         $connection->executeStatement('DELETE FROM instrument');
         $connection->executeStatement('DELETE FROM organization');
-        $connection->executeStatement('SET FOREIGN_KEY_CHECKS = 1');
+        
+        if ($platform === 'mysql') {
+            $connection->executeStatement('SET FOREIGN_KEY_CHECKS = 1');
+        } else {
+            $connection->executeStatement('PRAGMA foreign_keys = ON');
+        }
     }
 
     private function createInstruments(ObjectManager $manager, Organization $organization): array

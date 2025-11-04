@@ -1,0 +1,218 @@
+{% extends 'app-layout/layout.html.twig' %}
+
+{% block title %}Gestion des cours - {{ organization.name }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block main_content %}
+<div class="courses-management">
+    <!-- Header -->
+    <div class="courses-header">
+        <div class="courses-header-content">
+            <div class="courses-title-section">
+                <h1 class="courses-title">
+                    <span class="courses-icon">📚</span>
+                    Gestion des cours
+                </h1>
+                <p class="courses-subtitle">
+                    Gérez l'offre de formation de {{ organization.name }}
+                </p>
+            </div>
+            <div class="courses-actions">
+                <a href="{{ path('app_course_new') }}" class="btn-primary">
+                    <span class="btn-icon">➕</span>
+                    Nouveau cours
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="courses-stats">
+        <div class="stat-card">
+            <div class="stat-icon">📖</div>
+            <div class="stat-content">
+                <div class="stat-number">{{ courses|length }}</div>
+                <div class="stat-label">Cours total</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">👨‍🏫</div>
+            <div class="stat-content">
+                <div class="stat-number">
+                    {% set uniqueTeachers = [] %}
+                    {% for course in courses %}
+                        {% if course.teacher and course.teacher.id not in uniqueTeachers %}
+                            {% set uniqueTeachers = uniqueTeachers|merge([course.teacher.id]) %}
+                        {% endif %}
+                    {% endfor %}
+                    {{ uniqueTeachers|length }}
+                </div>
+                <div class="stat-label">Professeurs actifs</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-content">
+                <div class="stat-number">
+                    {% set totalEnrollments = 0 %}
+                    {% for course in courses %}
+                        {% set totalEnrollments = totalEnrollments + course.enrollments|length %}
+                    {% endfor %}
+                    {{ totalEnrollments }}
+                </div>
+                <div class="stat-label">Inscriptions</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">📅</div>
+            <div class="stat-content">
+                <div class="stat-number">
+                    {% set totalLessons = 0 %}
+                    {% for course in courses %}
+                        {% set totalLessons = totalLessons + course.lessons|length %}
+                    {% endfor %}
+                    {{ totalLessons }}
+                </div>
+                <div class="stat-label">Leçons programmées</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="courses-filters">
+        <form method="GET" class="filters-form">
+            <div class="filter-group">
+                <label for="search" class="filter-label">Rechercher</label>
+                <input 
+                    type="text" 
+                    id="search" 
+                    name="search" 
+                    value="{{ search }}" 
+                    placeholder="Nom du cours, description, professeur..."
+                    class="filter-input"
+                >
+            </div>
+            <div class="filter-group">
+                <label for="teacher" class="filter-label">Professeur</label>
+                <select id="teacher" name="teacher" class="filter-select">
+                    <option value="">Tous les professeurs</option>
+                    {% set displayedTeachers = [] %}
+                    {% for course in courses %}
+                        {% if course.teacher and course.teacher.id not in displayedTeachers %}
+                            {% set displayedTeachers = displayedTeachers|merge([course.teacher.id]) %}
+                            <option value="{{ course.teacher.id }}" {{ teacher == course.teacher.id ? 'selected' : '' }}>
+                                {{ course.teacher.fullName }}
+                            </option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter-actions">
+                <button type="submit" class="btn-filter">
+                    🔍 Filtrer
+                </button>
+                {% if search or teacher %}
+                    <a href="{{ path('app_course_index') }}" class="btn-clear">
+                        ✖️ Effacer
+                    </a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+    <!-- Courses Grid -->
+    <div class="courses-content">
+        {% if courses|length > 0 %}
+            <div class="courses-grid">
+                {% for course in courses %}
+                    <div class="course-card">
+                        <!-- Course Header -->
+                        <div class="course-header">
+                            <div class="course-info">
+                                <h3 class="course-name">{{ course.name }}</h3>
+                                <div class="course-teacher">
+                                    <span class="teacher-avatar">👨‍🏫</span>
+                                    <span class="teacher-name">{{ course.teacher.fullName }}</span>
+                                </div>
+                            </div>
+                            <div class="course-actions">
+                                <div class="dropdown">
+                                    <button class="dropdown-toggle" data-dropdown-toggle="course-menu-{{ course.id }}">
+                                        ⋮
+                                    </button>
+                                    <div class="dropdown-menu" id="course-menu-{{ course.id }}">
+                                        <a href="{{ path('app_course_show', {'id': course.id}) }}" class="dropdown-item">
+                                            👁️ Voir détails
+                                        </a>
+                                        <a href="{{ path('app_course_edit', {'id': course.id}) }}" class="dropdown-item">
+                                            ✏️ Modifier
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <form method="post" action="{{ path('app_course_delete', {'id': course.id}) }}" class="dropdown-form">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ course.id) }}">
+                                            <button type="submit" class="dropdown-item dropdown-item-danger" 
+                                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce cours ?')">
+                                                🗑️ Supprimer
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Course Content -->
+                        {% if course.description %}
+                            <div class="course-description">
+                                {{ course.description|slice(0, 150) }}{% if course.description|length > 150 %}...{% endif %}
+                            </div>
+                        {% endif %}
+
+                        <!-- Course Stats -->
+                        <div class="course-stats">
+                            <div class="course-stat">
+                                <span class="stat-icon">👥</span>
+                                <span class="stat-text">{{ course.enrollments|length }} élève(s)</span>
+                            </div>
+                            <div class="course-stat">
+                                <span class="stat-icon">📅</span>
+                                <span class="stat-text">{{ course.lessons|length }} leçon(s)</span>
+                            </div>
+                        </div>
+
+                        <!-- Course Footer -->
+                        <div class="course-footer">
+                            <a href="{{ path('app_course_show', {'id': course.id}) }}" class="btn-outline">
+                                Voir détails
+                            </a>
+                            <a href="{{ path('app_course_edit', {'id': course.id}) }}" class="btn-primary">
+                                Modifier
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">📚</div>
+                <h3 class="empty-title">Aucun cours trouvé</h3>
+                <p class="empty-description">
+                    {% if search or teacher %}
+                        Aucun cours ne correspond à vos critères de recherche.
+                    {% else %}
+                        Vous n'avez pas encore créé de cours. Commencez par ajouter votre premier cours.
+                    {% endif %}
+                </p>
+                {% if not search and not teacher %}
+                    <a href="{{ path('app_course_new') }}" class="btn-primary">
+                        <span class="btn-icon">➕</span>
+                        Créer le premier cours
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

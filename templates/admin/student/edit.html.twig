@@ -1,0 +1,262 @@
+{% extends 'app-layout/layout.html.twig' %}
+
+{% block title %}Modifier {{ student.fullName }} - Élève{% endblock %}
+
+{% block main_content %}
+<div class="student-form-page">
+    <!-- Header -->
+    <div class="form-header">
+        <div class="form-header-content">
+            <div class="form-navigation">
+                <a href="{{ path('app_student_show', {'id': student.id}) }}" class="back-link">
+                    ← Retour au profil
+                </a>
+            </div>
+            <div class="form-title-section">
+                <h1 class="form-title">
+                    <span class="form-icon">✏️</span>
+                    Modifier {{ student.fullName }}
+                </h1>
+                <p class="form-subtitle">
+                    Modifiez les informations de l'élève
+                </p>
+            </div>
+            <div class="form-header-actions">
+                <a href="{{ path('app_student_show', {'id': student.id}) }}" class="btn-outline">
+                    👁️ Voir profil
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Content -->
+    <div class="form-content">
+        <div class="form-container">
+            {{ form_start(form, {'attr': {'class': 'student-form', 'novalidate': 'novalidate'}}) }}
+            
+            <!-- Personal Information Section -->
+            <div class="form-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">👤</span>
+                        Informations personnelles
+                    </h2>
+                    <p class="section-description">
+                        Modifiez les informations de base de l'élève
+                    </p>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        {{ form_label(form.firstname, 'Prénom *', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.firstname, {'attr': {'class': 'form-input', 'placeholder': 'Ex: Marie'}}) }}
+                        {{ form_errors(form.firstname) }}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ form_label(form.lastname, 'Nom *', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.lastname, {'attr': {'class': 'form-input', 'placeholder': 'Ex: Dupont'}}) }}
+                        {{ form_errors(form.lastname) }}
+                    </div>
+                    
+                    <div class="form-group form-group-full">
+                        {{ form_label(form.email, 'Adresse email *', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.email, {'attr': {'class': 'form-input', 'placeholder': 'Ex: marie.dupont@exemple.com'}}) }}
+                        {{ form_errors(form.email) }}
+                        <div class="form-help">
+                            Cette adresse est utilisée pour la connexion et les communications
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ form_label(form.dateOfBirth, 'Date de naissance', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.dateOfBirth, {'attr': {'class': 'form-input'}}) }}
+                        {{ form_errors(form.dateOfBirth) }}
+                        {% if student.dateOfBirth %}
+                            <div class="form-help">
+                                Âge actuel : {{ 'now'|date('Y') - student.dateOfBirth|date('Y') }} ans
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ form_label(form.phone, 'Téléphone', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.phone, {'attr': {'class': 'form-input', 'placeholder': 'Ex: 06 12 34 56 78'}}) }}
+                        {{ form_errors(form.phone) }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Address Section -->
+            <div class="form-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">📍</span>
+                        Adresse
+                    </h2>
+                    <p class="section-description">
+                        Adresse de résidence de l'élève (optionnel)
+                    </p>
+                </div>
+                
+                <div class="form-group">
+                    {{ form_label(form.address, 'Adresse complète', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.address, {'attr': {'class': 'form-textarea', 'placeholder': 'Ex: 123 rue de la Musique\n75001 Paris', 'rows': 3}}) }}
+                    {{ form_errors(form.address) }}
+                </div>
+            </div>
+
+            <!-- Security Section -->
+            <div class="form-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">🔐</span>
+                        Modifier le mot de passe
+                    </h2>
+                    <p class="section-description">
+                        Laissez vide pour conserver le mot de passe actuel
+                    </p>
+                </div>
+                
+                <div class="form-group">
+                    {{ form_label(form.password, 'Nouveau mot de passe', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.password, {'attr': {'class': 'form-input', 'placeholder': 'Laissez vide pour ne pas modifier'}}) }}
+                    {{ form_errors(form.password) }}
+                    <div class="form-help">
+                        Si vous souhaitez modifier le mot de passe, saisissez le nouveau (minimum 6 caractères)
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Summary -->
+            <div class="form-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">📊</span>
+                        Résumé d'activité
+                    </h2>
+                    <p class="section-description">
+                        Aperçu des activités actuelles de l'élève
+                    </p>
+                </div>
+                
+                <div class="activity-summary">
+                    <div class="activity-item">
+                        <div class="activity-icon">📚</div>
+                        <div class="activity-content">
+                            <div class="activity-title">Inscriptions aux cours</div>
+                            <div class="activity-value">{{ student.enrollments|length }} cours</div>
+                            {% if student.enrollments|length > 0 %}
+                                <div class="activity-detail">
+                                    {% for enrollment in student.enrollments|slice(0, 3) %}
+                                        <span class="activity-tag">{{ enrollment.course.name }}</span>
+                                    {% endfor %}
+                                    {% if student.enrollments|length > 3 %}
+                                        <span class="activity-more">+{{ student.enrollments|length - 3 }}</span>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon">🎵</div>
+                        <div class="activity-content">
+                            <div class="activity-title">Locations d'instruments</div>
+                            <div class="activity-value">{{ student.instrumentRentals|length }} instrument(s)</div>
+                            {% if student.instrumentRentals|length > 0 %}
+                                <div class="activity-detail">
+                                    {% for rental in student.instrumentRentals|slice(0, 3) %}
+                                        <span class="activity-tag">{{ rental.instrument.name }}</span>
+                                    {% endfor %}
+                                    {% if student.instrumentRentals|length > 3 %}
+                                        <span class="activity-more">+{{ student.instrumentRentals|length - 3 }}</span>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon">💰</div>
+                        <div class="activity-content">
+                            <div class="activity-title">Paiements</div>
+                            <div class="activity-value">{{ student.payments|length }} paiement(s)</div>
+                            {% if student.payments|length > 0 %}
+                                {% set totalAmount = 0 %}
+                                {% for payment in student.payments %}
+                                    {% set totalAmount = totalAmount + payment.amount %}
+                                {% endfor %}
+                                <div class="activity-detail">
+                                    <span class="activity-tag">Total: {{ totalAmount }}€</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <div class="form-actions-content">
+                    <a href="{{ path('app_student_show', {'id': student.id}) }}" class="btn-outline">
+                        Annuler
+                    </a>
+                    <button type="submit" class="btn-primary">
+                        <span class="btn-icon">💾</span>
+                        Enregistrer les modifications
+                    </button>
+                </div>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+
+        <!-- Form Help -->
+        <div class="form-sidebar">
+            <div class="help-card">
+                <div class="help-header">
+                    <h3 class="help-title">⚠️ Attention</h3>
+                </div>
+                <div class="help-content">
+                    <div class="help-item">
+                        <strong>Email unique :</strong>
+                        L'adresse email doit être unique dans l'organisation.
+                    </div>
+                    <div class="help-item">
+                        <strong>Mot de passe :</strong>
+                        Laissez le champ vide pour conserver le mot de passe actuel.
+                    </div>
+                    {% if student.enrollments|length > 0 or student.instrumentRentals|length > 0 or student.payments|length > 0 %}
+                        <div class="help-item">
+                            <strong>Suppression :</strong>
+                            Cet élève a des activités en cours. La suppression sera limitée.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="help-card">
+                <div class="help-header">
+                    <h3 class="help-title">🔗 Actions rapides</h3>
+                </div>
+                <div class="help-content">
+                    <a href="{{ path('app_student_show', {'id': student.id}) }}" class="help-link">
+                        👁️ Voir le profil complet
+                    </a>
+                    {% if student.enrollments|length == 0 %}
+                        <a href="#" class="help-link">
+                            📚 Inscrire à un cours
+                        </a>
+                    {% endif %}
+                    {% if student.instrumentRentals|length == 0 %}
+                        <a href="#" class="help-link">
+                            🎵 Louer un instrument
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

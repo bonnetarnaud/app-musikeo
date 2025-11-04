@@ -1,0 +1,185 @@
+{% extends 'app-layout/layout.html.twig' %}
+
+{% block title %}Nouvel élève - {{ organization.name }}{% endblock %}
+
+{% block main_content %}
+<div class="student-form-page">
+    <!-- Header -->
+    <div class="form-header">
+        <div class="form-header-content">
+            <div class="form-navigation">
+                <a href="{{ path('app_student_index') }}" class="back-link">
+                    ← Retour aux élèves
+                </a>
+            </div>
+            <div class="form-title-section">
+                <h1 class="form-title">
+                    <span class="form-icon">➕</span>
+                    Nouvel élève
+                </h1>
+                <p class="form-subtitle">
+                    Ajoutez un nouvel élève à {{ organization.name }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Content -->
+    <div class="form-content">
+        <div class="form-container">
+            {{ form_start(form, {'attr': {'class': 'student-form', 'novalidate': 'novalidate'}}) }}
+            
+            <!-- Personal Information Section -->
+            <div class="form-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">👤</span>
+                        Informations personnelles
+                    </h2>
+                    <p class="section-description">
+                        Renseignez les informations de base de l'élève
+                    </p>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        {{ form_label(form.firstname, 'Prénom *', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.firstname, {'attr': {'class': 'form-input', 'placeholder': 'Ex: Marie'}}) }}
+                        {{ form_errors(form.firstname) }}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ form_label(form.lastname, 'Nom *', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.lastname, {'attr': {'class': 'form-input', 'placeholder': 'Ex: Dupont'}}) }}
+                        {{ form_errors(form.lastname) }}
+                    </div>
+                    
+                    <div class="form-group form-group-full">
+                        {{ form_label(form.email, 'Adresse email *', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.email, {'attr': {'class': 'form-input', 'placeholder': 'Ex: marie.dupont@exemple.com'}}) }}
+                        {{ form_errors(form.email) }}
+                        <div class="form-help">
+                            Cette adresse sera utilisée pour la connexion et les communications
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ form_label(form.dateOfBirth, 'Date de naissance', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.dateOfBirth, {'attr': {'class': 'form-input'}}) }}
+                        {{ form_errors(form.dateOfBirth) }}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ form_label(form.phone, 'Téléphone', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.phone, {'attr': {'class': 'form-input', 'placeholder': 'Ex: 06 12 34 56 78'}}) }}
+                        {{ form_errors(form.phone) }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Address Section -->
+            <div class="form-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">📍</span>
+                        Adresse
+                    </h2>
+                    <p class="section-description">
+                        Adresse de résidence de l'élève (optionnel)
+                    </p>
+                </div>
+                
+                <div class="form-group">
+                    {{ form_label(form.address, 'Adresse complète', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.address, {'attr': {'class': 'form-textarea', 'placeholder': 'Ex: 123 rue de la Musique\n75001 Paris', 'rows': 3}}) }}
+                    {{ form_errors(form.address) }}
+                </div>
+            </div>
+
+            <!-- Security Section -->
+            <div class="form-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">🔐</span>
+                        Accès et sécurité
+                    </h2>
+                    <p class="section-description">
+                        Définissez le mot de passe pour l'accès à l'espace élève
+                    </p>
+                </div>
+                
+                <div class="form-group">
+                    {{ form_label(form.password, 'Mot de passe *', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.password, {'attr': {'class': 'form-input', 'placeholder': 'Minimum 6 caractères'}}) }}
+                    {{ form_errors(form.password) }}
+                    <div class="form-help">
+                        Le mot de passe doit contenir au minimum 6 caractères
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <div class="form-actions-content">
+                    <a href="{{ path('app_student_index') }}" class="btn-outline">
+                        Annuler
+                    </a>
+                    <button type="submit" class="btn-primary">
+                        <span class="btn-icon">💾</span>
+                        Créer l'élève
+                    </button>
+                </div>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+
+        <!-- Form Help -->
+        <div class="form-sidebar">
+            <div class="help-card">
+                <div class="help-header">
+                    <h3 class="help-title">💡 Conseils</h3>
+                </div>
+                <div class="help-content">
+                    <div class="help-item">
+                        <strong>Email unique :</strong>
+                        Chaque élève doit avoir une adresse email unique pour pouvoir se connecter.
+                    </div>
+                    <div class="help-item">
+                        <strong>Mot de passe :</strong>
+                        Choisissez un mot de passe temporaire que l'élève pourra modifier plus tard.
+                    </div>
+                    <div class="help-item">
+                        <strong>Informations optionnelles :</strong>
+                        Les champs comme le téléphone et l'adresse peuvent être complétés plus tard.
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-card">
+                <div class="help-header">
+                    <h3 class="help-title">📋 Prochaines étapes</h3>
+                </div>
+                <div class="help-content">
+                    <div class="help-step">
+                        <div class="step-number">1</div>
+                        <div class="step-text">Créer le profil élève</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="step-number">2</div>
+                        <div class="step-text">Inscrire aux cours</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="step-number">3</div>
+                        <div class="step-text">Configurer les paiements</div>
+                    </div>
+                    <div class="help-step">
+                        <div class="step-number">4</div>
+                        <div class="step-text">Gérer les locations d'instruments</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

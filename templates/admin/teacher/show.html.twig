@@ -1,0 +1,222 @@
+{% extends 'app-layout/layout.html.twig' %}
+
+{% block title %}{{ teacher.firstname }} {{ teacher.lastname }} - Profil{% endblock %}
+
+{% block main_content %}
+<div class="teacher-profile-page">
+    <!-- Header -->
+    <div class="page-header">
+        <div class="page-header-content">
+            <nav class="breadcrumb">
+                <a href="{{ path('app_teacher_index') }}" class="breadcrumb-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"></path>
+                    </svg>
+                    Professeurs
+                </a>
+                <svg class="breadcrumb-separator" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+                <span class="breadcrumb-current">{{ teacher.firstname }} {{ teacher.lastname }}</span>
+            </nav>
+        </div>
+        
+        <div class="page-actions">
+            <a href="{{ path('app_teacher_edit', {id: teacher.id}) }}" class="btn-secondary">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+                Modifier
+            </a>
+            
+            <form method="post" action="{{ path('app_teacher_delete', {id: teacher.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce professeur ? Cette action est irréversible.')" class="inline">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ teacher.id) }}">
+                <button type="submit" class="btn-danger">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                    Supprimer
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Profil du professeur -->
+    <div class="profile-container">
+        <!-- Section principale -->
+        <div class="profile-main">
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <div class="avatar-placeholder avatar-large">
+                            {{ teacher.firstname|first|upper }}{{ teacher.lastname|first|upper }}
+                        </div>
+                        <div class="profile-status">
+                            {% if 'ROLE_TEACHER' in teacher.roles %}
+                                <span class="status-indicator status-active"></span>
+                            {% else %}
+                                <span class="status-indicator status-inactive"></span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="profile-info">
+                        <h1 class="profile-name">{{ teacher.firstname }} {{ teacher.lastname }}</h1>
+                        <p class="profile-email">{{ teacher.email }}</p>
+                        <div class="profile-badges">
+                            {% if 'ROLE_TEACHER' in teacher.roles %}
+                                <span class="profile-badge badge-success">Actif</span>
+                            {% else %}
+                                <span class="profile-badge badge-warning">Inactif</span>
+                            {% endif %}
+                            <span class="profile-badge badge-primary">Professeur</span>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if teacher.biography %}
+                <div class="profile-bio">
+                    <h3 class="bio-title">Présentation</h3>
+                    <p class="bio-content">{{ teacher.biography|nl2br }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Sidebar avec informations détaillées -->
+        <div class="profile-sidebar">
+            <!-- Informations de contact -->
+            <div class="info-card">
+                <div class="info-header">
+                    <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                    <h3 class="info-title">Informations de contact</h3>
+                </div>
+                
+                <div class="info-content">
+                    <div class="info-item">
+                        <span class="info-label">E-mail:</span>
+                        <a href="mailto:{{ teacher.email }}" class="info-value info-link">{{ teacher.email }}</a>
+                    </div>
+                    
+                    {% if teacher.phone %}
+                    <div class="info-item">
+                        <span class="info-label">Téléphone:</span>
+                        <a href="tel:{{ teacher.phone }}" class="info-value info-link">{{ teacher.phone }}</a>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="info-item">
+                        <span class="info-label">Organisation:</span>
+                        <span class="info-value">{{ teacher.organization.name }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Spécialités -->
+            {% if teacher.specialties %}
+            <div class="info-card">
+                <div class="info-header">
+                    <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+                    </svg>
+                    <h3 class="info-title">Spécialités</h3>
+                </div>
+                
+                <div class="info-content">
+                    <div class="specialties-tags">
+                        {% for specialty in teacher.specialties|split(',') %}
+                            <span class="specialty-tag">{{ specialty|trim }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Statistiques -->
+            <div class="info-card">
+                <div class="info-header">
+                    <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    <h3 class="info-title">Statistiques</h3>
+                </div>
+                
+                <div class="info-content">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number">12</div>
+                            <div class="stat-label">Élèves actifs</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">36</div>
+                            <div class="stat-label">Cours ce mois</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">2</div>
+                            <div class="stat-label">Instruments enseignés</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">4.8</div>
+                            <div class="stat-label">Note moyenne</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions rapides -->
+            <div class="info-card">
+                <div class="info-header">
+                    <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                    <h3 class="info-title">Actions rapides</h3>
+                </div>
+                
+                <div class="info-content">
+                    <div class="quick-actions">
+                        <button class="quick-action">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                            Envoyer un message
+                        </button>
+                        
+                        <button class="quick-action">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3M8 7v5a1 1 0 001 1h6a1 1 0 001-1V7"></path>
+                            </svg>
+                            Voir les cours
+                        </button>
+                        
+                        <button class="quick-action">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            Gérer les élèves
+                        </button>
+                        
+                        <form method="post" action="{{ path('app_teacher_toggle_status', {id: teacher.id}) }}" class="inline">
+                            <input type="hidden" name="_token" value="{{ csrf_token('toggle-status' ~ teacher.id) }}">
+                            <button type="submit" class="quick-action">
+                                {% if 'ROLE_TEACHER' in teacher.roles %}
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728"></path>
+                                    </svg>
+                                    Désactiver le compte
+                                {% else %}
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    Activer le compte
+                                {% endif %}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

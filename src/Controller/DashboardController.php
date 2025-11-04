@@ -46,7 +46,7 @@ class DashboardController extends AbstractController
         $pendingPreRegistrations = $preRegistrationRepository->countByOrganizationAndStatus($organization, 'pending');
         $recentPreRegistrations = $preRegistrationRepository->findRecentByOrganization($organization, 5);
         
-        return $this->render('dashboard/admin.html.twig', [
+        return $this->render('admin/dashboard.html.twig', [
             'totalPreRegistrations' => $totalPreRegistrations,
             'pendingPreRegistrations' => $pendingPreRegistrations,
             'recentPreRegistrations' => $recentPreRegistrations,
@@ -77,7 +77,7 @@ class DashboardController extends AbstractController
         // Compter le nombre total d'étudiants uniques
         $totalStudents = $enrollmentRepository->countUniqueStudentsByTeacher($teacher);
         
-        return $this->render('dashboard/teacher.html.twig', [
+        return $this->render('teacher/dashboard.html.twig', [
             'teacherCourses' => $teacherCourses,
             'upcomingLessons' => $upcomingLessons,
             'recentLessons' => $recentLessons,

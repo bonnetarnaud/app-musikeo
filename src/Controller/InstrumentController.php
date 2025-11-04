@@ -32,7 +32,7 @@ class InstrumentController extends AbstractController
         $rentedInstruments = count(array_filter($instruments, fn($i) => $i->isCurrentlyRented()));
         $rentableInstruments = count(array_filter($instruments, fn($i) => $i->isRentable()));
 
-        return $this->render('instrument/index.html.twig', [
+        return $this->render('admin/instrument/index.html.twig', [
             'instruments' => $instruments,
             'stats' => [
                 'total' => $totalInstruments,
@@ -60,7 +60,7 @@ class InstrumentController extends AbstractController
             return $this->redirectToRoute('app_instrument_index');
         }
 
-        return $this->render('instrument/new.html.twig', [
+        return $this->render('admin/instrument/new.html.twig', [
             'instrument' => $instrument,
             'form' => $form,
         ]);
@@ -71,7 +71,7 @@ class InstrumentController extends AbstractController
     {
         $this->checkOrganization($instrument);
         
-        return $this->render('instrument/show.html.twig', [
+        return $this->render('admin/instrument/show.html.twig', [
             'instrument' => $instrument,
         ]);
     }
@@ -91,7 +91,7 @@ class InstrumentController extends AbstractController
             return $this->redirectToRoute('app_instrument_index');
         }
 
-        return $this->render('instrument/edit.html.twig', [
+        return $this->render('admin/instrument/edit.html.twig', [
             'instrument' => $instrument,
             'form' => $form,
         ]);
@@ -142,7 +142,7 @@ class InstrumentController extends AbstractController
             }
         }
 
-        return $this->render('instrument/rent.html.twig', [
+        return $this->render('admin/instrument/rent.html.twig', [
             'instrument' => $instrument,
             'students' => $students,
         ]);

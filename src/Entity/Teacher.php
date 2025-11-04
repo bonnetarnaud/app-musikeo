@@ -17,6 +17,9 @@ class Teacher extends User
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $biography = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $specialties = null;
+
     /**
      * @var Collection<int, Course>
      */
@@ -49,6 +52,18 @@ class Teacher extends User
     public function setBiography(?string $biography): static
     {
         $this->biography = $biography;
+
+        return $this;
+    }
+
+    public function getSpecialties(): ?string
+    {
+        return $this->specialties;
+    }
+
+    public function setSpecialties(?string $specialties): static
+    {
+        $this->specialties = $specialties;
 
         return $this;
     }

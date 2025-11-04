@@ -1,0 +1,144 @@
+{% extends 'app-layout/layout.html.twig' %}
+
+{% block title %}Nouveau cours - {{ organization.name }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block main_content %}
+<div class="course-form-page">
+    <!-- Header -->
+    <div class="form-header">
+        <div class="form-header-content">
+            <div class="form-breadcrumb">
+                <a href="{{ path('app_course_index') }}" class="breadcrumb-link">Cours</a>
+                <span class="breadcrumb-separator">›</span>
+                <span class="breadcrumb-current">Nouveau cours</span>
+            </div>
+            <h1 class="form-title">
+                <span class="form-icon">📚</span>
+                Créer un nouveau cours
+            </h1>
+            <p class="form-subtitle">
+                Ajoutez un nouveau cours à l'offre de formation de {{ organization.name }}
+            </p>
+        </div>
+    </div>
+
+    <!-- Form -->
+    <div class="form-container">
+        <div class="form-card">
+            {{ form_start(form, {'attr': {'class': 'course-form', 'novalidate': 'novalidate'}}) }}
+                
+                <!-- Course Information -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <span class="section-icon">ℹ️</span>
+                        Informations du cours
+                    </h3>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            {{ form_label(form.name, null, {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.name, {'attr': {'class': 'form-input'}}) }}
+                            {% if form.name.vars.errors|length > 0 %}
+                                <div class="form-error">
+                                    {{ form_errors(form.name) }}
+                                </div>
+                            {% endif %}
+                            <div class="form-help">
+                                Le nom doit être clair et descriptif (ex: "Piano débutant", "Guitare jazz")
+                            </div>
+                        </div>
+
+                        <div class="form-group form-group-full">
+                            {{ form_label(form.description, null, {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.description, {'attr': {'class': 'form-textarea'}}) }}
+                            {% if form.description.vars.errors|length > 0 %}
+                                <div class="form-error">
+                                    {{ form_errors(form.description) }}
+                                </div>
+                            {% endif %}
+                            <div class="form-help">
+                                Décrivez le contenu, les objectifs et le niveau requis pour ce cours
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Teacher Assignment -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <span class="section-icon">👨‍🏫</span>
+                        Attribution du professeur
+                    </h3>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            {{ form_label(form.teacher, null, {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.teacher, {'attr': {'class': 'form-select'}}) }}
+                            {% if form.teacher.vars.errors|length > 0 %}
+                                <div class="form-error">
+                                    {{ form_errors(form.teacher) }}
+                                </div>
+                            {% endif %}
+                            <div class="form-help">
+                                Sélectionnez le professeur qui sera responsable de ce cours
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <a href="{{ path('app_course_index') }}" class="btn-cancel">
+                        ← Annuler
+                    </a>
+                    <button type="submit" class="btn-submit">
+                        <span class="btn-icon">💾</span>
+                        Créer le cours
+                    </button>
+                </div>
+
+            {{ form_end(form) }}
+        </div>
+
+        <!-- Help Panel -->
+        <div class="help-panel">
+            <h4 class="help-title">
+                <span class="help-icon">💡</span>
+                Conseils pour créer un cours
+            </h4>
+            
+            <div class="help-section">
+                <h5 class="help-section-title">Nom du cours</h5>
+                <ul class="help-list">
+                    <li>Utilisez un nom clair et descriptif</li>
+                    <li>Indiquez l'instrument et le niveau si pertinent</li>
+                    <li>Évitez les abréviations obscures</li>
+                </ul>
+            </div>
+
+            <div class="help-section">
+                <h5 class="help-section-title">Description</h5>
+                <ul class="help-list">
+                    <li>Décrivez les objectifs pédagogiques</li>
+                    <li>Précisez le niveau requis</li>
+                    <li>Mentionnez le style musical ou la méthode</li>
+                    <li>Indiquez la durée typique des séances</li>
+                </ul>
+            </div>
+
+            <div class="help-section">
+                <h5 class="help-section-title">Professeur</h5>
+                <ul class="help-list">
+                    <li>Choisissez un professeur compétent dans ce domaine</li>
+                    <li>Vérifiez sa disponibilité</li>
+                    <li>Vous pourrez modifier l'attribution plus tard</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

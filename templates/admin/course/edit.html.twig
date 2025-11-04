@@ -1,0 +1,177 @@
+{% extends 'app-layout/layout.html.twig' %}
+
+{% block title %}Modifier {{ course.name }} - {{ organization.name }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block main_content %}
+<div class="course-form-page">
+    <!-- Header -->
+    <div class="form-header">
+        <div class="form-header-content">
+            <div class="form-breadcrumb">
+                <a href="{{ path('app_course_index') }}" class="breadcrumb-link">Cours</a>
+                <span class="breadcrumb-separator">›</span>
+                <a href="{{ path('app_course_show', {'id': course.id}) }}" class="breadcrumb-link">{{ course.name }}</a>
+                <span class="breadcrumb-separator">›</span>
+                <span class="breadcrumb-current">Modifier</span>
+            </div>
+            <h1 class="form-title">
+                <span class="form-icon">✏️</span>
+                Modifier le cours
+            </h1>
+            <p class="form-subtitle">
+                Modifiez les informations du cours "{{ course.name }}"
+            </p>
+        </div>
+    </div>
+
+    <!-- Form -->
+    <div class="form-container">
+        <div class="form-card">
+            {{ form_start(form, {'attr': {'class': 'course-form', 'novalidate': 'novalidate'}}) }}
+                
+                <!-- Course Information -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <span class="section-icon">ℹ️</span>
+                        Informations du cours
+                    </h3>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            {{ form_label(form.name, null, {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.name, {'attr': {'class': 'form-input'}}) }}
+                            {% if form.name.vars.errors|length > 0 %}
+                                <div class="form-error">
+                                    {{ form_errors(form.name) }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group form-group-full">
+                            {{ form_label(form.description, null, {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.description, {'attr': {'class': 'form-textarea'}}) }}
+                            {% if form.description.vars.errors|length > 0 %}
+                                <div class="form-error">
+                                    {{ form_errors(form.description) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Teacher Assignment -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <span class="section-icon">👨‍🏫</span>
+                        Attribution du professeur
+                    </h3>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            {{ form_label(form.teacher, null, {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.teacher, {'attr': {'class': 'form-select'}}) }}
+                            {% if form.teacher.vars.errors|length > 0 %}
+                                <div class="form-error">
+                                    {{ form_errors(form.teacher) }}
+                                </div>
+                            {% endif %}
+                            <div class="form-help">
+                                Attention : Changer de professeur peut affecter les leçons programmées
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current Stats -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <span class="section-icon">📊</span>
+                        Statistiques actuelles
+                    </h3>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-icon">👥</div>
+                            <div class="stat-content">
+                                <div class="stat-number">{{ course.enrollments|length }}</div>
+                                <div class="stat-label">Élèves inscrits</div>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">📅</div>
+                            <div class="stat-content">
+                                <div class="stat-number">{{ course.lessons|length }}</div>
+                                <div class="stat-label">Leçons programmées</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% if course.enrollments|length > 0 or course.lessons|length > 0 %}
+                        <div class="warning-notice">
+                            <span class="warning-icon">⚠️</span>
+                            <div class="warning-content">
+                                <strong>Attention :</strong> Ce cours a des élèves inscrits{% if course.lessons|length > 0 %} et des leçons programmées{% endif %}. 
+                                Les modifications peuvent avoir un impact sur l'organisation existante.
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <a href="{{ path('app_course_show', {'id': course.id}) }}" class="btn-cancel">
+                        ← Retour
+                    </a>
+                    <button type="submit" class="btn-submit">
+                        <span class="btn-icon">💾</span>
+                        Enregistrer les modifications
+                    </button>
+                </div>
+
+            {{ form_end(form) }}
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="help-panel">
+            <h4 class="help-title">
+                <span class="help-icon">⚡</span>
+                Actions rapides
+            </h4>
+            
+            <div class="help-actions">
+                <a href="{{ path('app_course_show', {'id': course.id}) }}" class="help-action">
+                    <span class="action-icon">👁️</span>
+                    <div class="action-content">
+                        <div class="action-title">Voir le cours</div>
+                        <div class="action-description">Consulter les détails complets</div>
+                    </div>
+                </a>
+
+                {% if course.enrollments|length > 0 %}
+                    <div class="help-action">
+                        <span class="action-icon">👥</span>
+                        <div class="action-content">
+                            <div class="action-title">Élèves inscrits</div>
+                            <div class="action-description">{{ course.enrollments|length }} élève(s)</div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if course.lessons|length > 0 %}
+                    <div class="help-action">
+                        <span class="action-icon">📅</span>
+                        <div class="action-content">
+                            <div class="action-title">Leçons programmées</div>
+                            <div class="action-description">{{ course.lessons|length }} leçon(s)</div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

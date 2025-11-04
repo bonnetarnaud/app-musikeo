@@ -1,6 +1,11 @@
 @import "tailwindcss";
 
 @import "./layout/aside.css";
+@import "./layout/notifications-panel.css";
+@import "./teachers.css";
+@import "./courses.css";
+@import "./students.css";
+@import "./rooms.css";
 
   .button {
     @apply flex w-fit justify-center rounded-md bg-orange-500 hover:bg-orange-700 px-4 py-2 font-medium leading-6 text-white shadow-sm h-fit;

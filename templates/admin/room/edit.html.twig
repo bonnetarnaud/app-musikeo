@@ -1,0 +1,287 @@
+{% extends 'app-layout/layout.html.twig' %}
+
+{% block title %}Modifier {{ room.name }} - Salle{% endblock %}
+
+{% block main_content %}
+<div class="room-form-page">
+    <!-- Header -->
+    <div class="form-header">
+        <div class="form-header-content">
+            <div class="form-navigation">
+                <a href="{{ path('app_room_show', {'id': room.id}) }}" class="back-link">
+                    ← Retour à la salle
+                </a>
+            </div>
+            <div class="form-title-section">
+                <h1 class="form-title">
+                    <span class="form-icon">✏️</span>
+                    Modifier {{ room.name }}
+                </h1>
+                <p class="form-subtitle">
+                    Modifiez les informations de la salle
+                </p>
+            </div>
+            <div class="form-header-actions">
+                <a href="{{ path('app_room_show', {'id': room.id}) }}" class="btn-outline">
+                    👁️ Voir détails
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Content -->
+    <div class="form-content">
+        <div class="form-container">
+            {{ form_start(form, {'attr': {'class': 'room-form', 'novalidate': 'novalidate'}}) }}
+            
+            <!-- Basic Information Section -->
+            <div class="form-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">ℹ️</span>
+                        Informations de base
+                    </h2>
+                    <p class="section-description">
+                        Modifiez les informations essentielles de la salle
+                    </p>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group form-group-full">
+                        {{ form_label(form.name, 'Nom de la salle *', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.name, {'attr': {'class': 'form-input', 'placeholder': 'Ex: Salle de piano A1'}}) }}
+                        {{ form_errors(form.name) }}
+                        <div class="form-help">
+                            Nom unique et descriptif pour identifier cette salle
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ form_label(form.capacity, 'Capacité *', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.capacity, {'attr': {'class': 'form-input', 'placeholder': 'Ex: 8'}}) }}
+                        {{ form_errors(form.capacity) }}
+                        <div class="form-help">
+                            Nombre maximum de personnes (actuellement {{ room.capacity }})
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Location Section -->
+            <div class="form-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">📍</span>
+                        Localisation et équipements
+                    </h2>
+                    <p class="section-description">
+                        Mettez à jour l'emplacement et les équipements disponibles
+                    </p>
+                </div>
+                
+                <div class="form-group">
+                    {{ form_label(form.location, 'Description de la salle', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.location, {'attr': {'class': 'form-textarea', 'placeholder': 'Ex: Bâtiment A, 1er étage, porte 101\nÉquipée d\'un piano droit Yamaha\nTableau, chaises, estrade', 'rows': 4}}) }}
+                    {{ form_errors(form.location) }}
+                    <div class="form-help">
+                        Emplacement exact et équipements disponibles dans cette salle
+                    </div>
+                </div>
+            </div>
+
+            <!-- Current Usage Summary -->
+            <div class="form-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">📊</span>
+                        Utilisation actuelle
+                    </h2>
+                    <p class="section-description">
+                        Aperçu de l'utilisation de cette salle
+                    </p>
+                </div>
+                
+                <div class="usage-summary">
+                    <div class="usage-item">
+                        <div class="usage-icon">📅</div>
+                        <div class="usage-content">
+                            <div class="usage-title">Leçons programmées</div>
+                            <div class="usage-value">{{ room.lessons|length }} leçon(s)</div>
+                            {% if room.lessons|length > 0 %}
+                                <div class="usage-detail">
+                                    {% for lesson in room.lessons|slice(0, 3) %}
+                                        <span class="usage-tag">
+                                            {{ lesson.startDatetime|date('d/m') }} 
+                                            {{ lesson.startDatetime|date('H:i') }}
+                                        </span>
+                                    {% endfor %}
+                                    {% if room.lessons|length > 3 %}
+                                        <span class="usage-more">+{{ room.lessons|length - 3 }}</span>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="usage-item">
+                        <div class="usage-icon">
+                            {% if room.lessons|length == 0 %}
+                                💤
+                            {% elseif room.lessons|length < 5 %}
+                                ✅
+                            {% else %}
+                                🔥
+                            {% endif %}
+                        </div>
+                        <div class="usage-content">
+                            <div class="usage-title">Statut d'utilisation</div>
+                            <div class="usage-value">
+                                {% if room.lessons|length == 0 %}
+                                    Inutilisée
+                                {% elseif room.lessons|length < 5 %}
+                                    Disponible
+                                {% else %}
+                                    Très utilisée
+                                {% endif %}
+                            </div>
+                            <div class="usage-detail">
+                                {% if room.lessons|length == 0 %}
+                                    <span class="usage-info">Aucune leçon programmée</span>
+                                {% else %}
+                                    <span class="usage-info">
+                                        {{ ((room.lessons|length / 20) * 100)|round }}% d'utilisation estimée
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="usage-item">
+                        <div class="usage-icon">⏰</div>
+                        <div class="usage-content">
+                            <div class="usage-title">Temps d'utilisation</div>
+                            <div class="usage-value">
+                                {% set totalHours = 0 %}
+                                {% for lesson in room.lessons %}
+                                    {% set duration = (lesson.endDatetime.timestamp - lesson.startDatetime.timestamp) / 3600 %}
+                                    {% set totalHours = totalHours + duration %}
+                                {% endfor %}
+                                {{ totalHours|round(1) }}h total
+                            </div>
+                            {% if room.lessons|length > 0 %}
+                                <div class="usage-detail">
+                                    <span class="usage-info">
+                                        {{ (totalHours / room.lessons|length)|round(1) }}h en moyenne par leçon
+                                    </span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <div class="form-actions-content">
+                    <a href="{{ path('app_room_show', {'id': room.id}) }}" class="btn-outline">
+                        Annuler
+                    </a>
+                    <button type="submit" class="btn-primary">
+                        <span class="btn-icon">💾</span>
+                        Enregistrer les modifications
+                    </button>
+                </div>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+
+        <!-- Form Help -->
+        <div class="form-sidebar">
+            <div class="help-card">
+                <div class="help-header">
+                    <h3 class="help-title">⚠️ Attention</h3>
+                </div>
+                <div class="help-content">
+                    {% if room.lessons|length > 0 %}
+                        <div class="help-item">
+                            <strong>Leçons programmées :</strong>
+                            Cette salle a {{ room.lessons|length }} leçon(s) programmée(s). Les modifications n'affecteront pas les leçons existantes.
+                        </div>
+                    {% endif %}
+                    <div class="help-item">
+                        <strong>Changement de capacité :</strong>
+                        Vérifiez que les leçons existantes respectent toujours la nouvelle capacité.
+                    </div>
+                    {% if room.lessons|length == 0 %}
+                        <div class="help-item">
+                            <strong>Suppression possible :</strong>
+                            Cette salle peut être supprimée car elle n'a aucune leçon programmée.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="help-card">
+                <div class="help-header">
+                    <h3 class="help-title">🔗 Actions rapides</h3>
+                </div>
+                <div class="help-content">
+                    <a href="{{ path('app_room_show', {'id': room.id}) }}" class="help-link">
+                        👁️ Voir les détails complets
+                    </a>
+                    <a href="{{ path('app_room_index') }}" class="help-link">
+                        🏢 Retour à toutes les salles
+                    </a>
+                    {% if room.lessons|length == 0 %}
+                        <div class="help-divider"></div>
+                        <form method="post" action="{{ path('app_room_delete', {'id': room.id}) }}" class="help-form">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ room.id) }}">
+                            <button type="submit" class="help-link help-link-danger" 
+                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette salle ?')">
+                                🗑️ Supprimer cette salle
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="help-card">
+                <div class="help-header">
+                    <h3 class="help-title">💡 Suggestions</h3>
+                </div>
+                <div class="help-content">
+                    {% if room.capacity <= 5 %}
+                        <div class="help-item">
+                            <strong>Petite salle :</strong>
+                            Idéale pour les cours individuels et les petits groupes.
+                        </div>
+                    {% elseif room.capacity <= 15 %}
+                        <div class="help-item">
+                            <strong>Salle moyenne :</strong>
+                            Parfaite pour les ensembles et ateliers de groupe.
+                        </div>
+                    {% else %}
+                        <div class="help-item">
+                            <strong>Grande salle :</strong>
+                            Adaptée aux orchestres et événements importants.
+                        </div>
+                    {% endif %}
+                    
+                    {% if room.lessons|length == 0 %}
+                        <div class="help-item">
+                            <strong>Salle disponible :</strong>
+                            Cette salle est libre pour de nouvelles programmations.
+                        </div>
+                    {% elseif room.lessons|length >= 10 %}
+                        <div class="help-item">
+                            <strong>Salle très utilisée :</strong>
+                            Considérez créer une salle similaire si la demande est forte.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
