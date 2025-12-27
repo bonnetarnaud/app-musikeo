@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau mot de passe{% endblock %}
+
+{% block body %}
+<div class="bg-white dark:bg-gray-900">
+    <div class="flex justify-center min-h-screen py-12">
+        <div class="flex items-center w-full max-w-md px-6 mx-auto">
+            <div class="flex-1">
+                <div class="text-center">
+                    <img class="w-64 mx-auto mb-8" src="{{ asset('images/logo.png') }}" alt="logo">
+                    <h1 class="text-2xl font-semibold text-gray-900 mb-2">Nouveau mot de passe</h1>
+                    <p class="text-sm text-gray-600">Choisissez un nouveau mot de passe pour votre compte</p>
+                </div>
+
+                <div class="mt-8">
+                    {{ form_start(resetForm, {'attr': {'class': 'space-y-6'}}) }}
+                        <div>
+                            <label for="{{ resetForm.plainPassword.first.vars.id }}" class="block text-sm font-medium leading-6 text-gray-900">
+                                Nouveau mot de passe
+                            </label>
+                            <div class="mt-2">
+                                {{ form_widget(resetForm.plainPassword.first, {
+                                    'attr': {
+                                        'class': 'block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-myrose sm:text-sm sm:leading-6',
+                                        'placeholder': '********'
+                                    }
+                                }) }}
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="{{ resetForm.plainPassword.second.vars.id }}" class="block text-sm font-medium leading-6 text-gray-900">
+                                Confirmer le mot de passe
+                            </label>
+                            <div class="mt-2">
+                                {{ form_widget(resetForm.plainPassword.second, {
+                                    'attr': {
+                                        'class': 'block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-myrose sm:text-sm sm:leading-6',
+                                        'placeholder': '********'
+                                    }
+                                }) }}
+                            </div>
+                        </div>
+
+                        <button type="submit" class="button button-primary w-full uppercase">
+                            Réinitialiser le mot de passe
+                        </button>
+                    {{ form_end(resetForm) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

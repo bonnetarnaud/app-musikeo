@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mot de passe oublié{% endblock %}
+
+{% block body %}
+<div class="bg-white dark:bg-gray-900">
+    <div class="flex justify-center min-h-screen py-12">
+        <div class="flex items-center w-full max-w-md px-6 mx-auto">
+            <div class="flex-1">
+                <div class="text-center">
+                    <img class="w-64 mx-auto mb-8" src="{{ asset('images/logo.png') }}" alt="logo">
+                    <h1 class="text-2xl font-semibold text-gray-900 mb-2">Mot de passe oublié ?</h1>
+                    <p class="text-sm text-gray-600">Entrez votre adresse email pour recevoir un lien de réinitialisation</p>
+                </div>
+
+                {% for flash_error in app.flashes('reset_password_error') %}
+                    <div class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+                        {{ flash_error }}
+                    </div>
+                {% endfor %}
+
+                <div class="mt-8">
+                    {{ form_start(requestForm, {'attr': {'class': 'space-y-6'}}) }}
+                        <div>
+                            <label for="{{ requestForm.email.vars.id }}" class="block text-sm font-medium leading-6 text-gray-900">
+                                Adresse email
+                            </label>
+                            <div class="mt-2">
+                                {{ form_widget(requestForm.email, {
+                                    'attr': {
+                                        'class': 'block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-myrose sm:text-sm sm:leading-6',
+                                        'placeholder': 'votre@email.com'
+                                    }
+                                }) }}
+                            </div>
+                        </div>
+
+                        <button type="submit" class="button button-primary w-full uppercase">
+                            Envoyer le lien de réinitialisation
+                        </button>
+                    {{ form_end(requestForm) }}
+
+                    <div class="text-center mt-6">
+                        <a href="{{ path('app_login') }}" class="text-sm text-gray-600 hover:text-myred transition">
+                            ← Retour à la connexion
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
