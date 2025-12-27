@@ -37,7 +37,10 @@ class DashboardController extends AbstractController
 
     #[Route('/admin', name: 'app_dashboard_admin')]
     #[IsGranted('ROLE_ADMIN')]
-    public function admin(PreRegistrationRepository $preRegistrationRepository): Response
+    public function admin(
+        PreRegistrationRepository $preRegistrationRepository,
+        \App\Service\OrganizationService $organizationService
+    ): Response
     {
         $organization = $this->getUser()->getOrganization();
         
@@ -46,10 +49,14 @@ class DashboardController extends AbstractController
         $pendingPreRegistrations = $preRegistrationRepository->countByOrganizationAndStatus($organization, 'pending');
         $recentPreRegistrations = $preRegistrationRepository->findRecentByOrganization($organization, 5);
         
+        // Statistiques d'utilisation via le service
+        $usageStats = $organizationService->getUsageStats($organization);
+        
         return $this->render('admin/dashboard.html.twig', [
             'totalPreRegistrations' => $totalPreRegistrations,
             'pendingPreRegistrations' => $pendingPreRegistrations,
             'recentPreRegistrations' => $recentPreRegistrations,
+            'usageStats' => $usageStats,
         ]);
     }
 
