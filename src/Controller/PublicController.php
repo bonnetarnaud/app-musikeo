@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/{slug}', requirements: ['slug' => '(?!login|register|admin|teacher|student|logout|_)[a-z0-9\-]+'])]
+#[Route('/{slug}', requirements: ['slug' => '(?!login|register|reset-password|admin|teacher|student|logout|_)[a-z0-9\-]+'])]
 class PublicController extends AbstractController
 {
     public function __construct(
