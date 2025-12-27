@@ -1,0 +1,14 @@
+{
+  "recommendations": [
+    "gruntfuggly.todo-tree",
+    "wayou.vscode-todo-highlight",
+    "yzhang.markdown-all-in-one",
+    "bmewburn.vscode-intelephense-client",
+    "mehedidracula.php-namespace-resolver",
+    "bradlc.vscode-tailwindcss",
+    "editorconfig.editorconfig",
+    "mikestead.dotenv",
+    "dsznajder.es7-react-js-snippets"
+  ],
+  "unwantedRecommendations": []
+}
