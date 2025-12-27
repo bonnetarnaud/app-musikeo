@@ -13,18 +13,12 @@
         <div class="flex items-center w-full max-w-md px-6 mx-auto lg:w-2/6">
             <div class="flex-1">
                 <div class="text-center">
-                    <img class="w-32 mx-auto" src="{{ asset('images/logo.png') }}" alt="logo">
+                    <img class="w-80 mx-auto" src="{{ asset('images/logo.png') }}" alt="logo">
                 </div>
                 <div class="mt-8">
                         <form method="post" class="space-y-6">
                         {% if error %}
                             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-                        {% endif %}
-
-                        {% if app.user %}
-                            <div class="mb-3">
-                                You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
-                            </div>
                         {% endif %}
 
                         <div>
@@ -50,8 +44,12 @@
                             name="password" type="password" 
                             autocomplete="current-password" required 
                             class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                       
-                           
+                        </div>
+
+                        <div class="text-right mt-2">
+                            <a href="{{ path('app_forgot_password_request') }}" class="text-sm text-gray-600 hover:text-myred transition">
+                                Mot de passe oublié ?
+                            </a>
                         </div>
 
 
@@ -61,7 +59,7 @@
                         
                         <div>
                             <button type="submit" 
-                            class="button button-primary uppercase w-full">
+                            class="button button-primary uppercase w-full mt-4">
                             Connexion
                             </button>
                         </div>
@@ -69,14 +67,14 @@
                     </form>
 
                     <!-- Lien vers inscription -->
-                    <div class="text-center mt-6">
+                    <div class="text-center mt-12">
                         <p class="text-sm text-gray-600">
-                            Vous n'avez pas encore d'école sur Musikeo ?
+                            Vous n'avez pas encore créé votre école sur Musikeo ?
                         </p>
                         <a href="{{ path('app_register') }}" 
-                           class="mt-2 inline-flex items-center px-4 py-2 border border-purple-300 rounded-lg text-sm font-medium text-purple-700 bg-purple-50 hover:bg-purple-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition duration-150 ease-in-out">
-                            <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                           class="button button-highlight mt-4 inline-flex items-center">
+                            <svg class="h-5 w-5 mr-2 arrow-animate" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
                             </svg>
                             Créer mon école
                         </a>
