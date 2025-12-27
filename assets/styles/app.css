@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@theme {
+  --color-primary: #13A4AA;
+  --color-secondary: #1A7F83;
+  --color-light: #f0f7f4;
+  --color-myred: #FF0045;
+  --color-myrose: #FF00B6;
+}
+
 @import "./layout/aside.css";
 @import "./layout/notifications-panel.css";
 @import "./teachers.css";
@@ -8,7 +16,17 @@
 @import "./rooms.css";
 
   .button {
-    @apply flex w-fit justify-center rounded-md bg-orange-500 hover:bg-orange-700 px-4 py-2 font-medium leading-6 text-white shadow-sm h-fit;
+    @apply 
+      flex justify-center
+      cursor-pointer
+      rounded-md 
+      bg-orange-500 hover:bg-orange-700 
+      px-4 py-2 
+      font-medium leading-6 
+      text-white 
+      shadow-sm 
+      h-fit 
+      transition-all duration-300;
   }
 
   .button:hover {
@@ -24,11 +42,28 @@
     @apply px-2 py-1 text-sm;
   }
   .button-primary {
-    @apply bg-[#13A4AA] hover:bg-[#1A7F83] rounded-full;
+    @apply bg-gradient-to-r from-myrose to-myred hover:from-myred hover:to-myrose rounded-full ;
   }
   .button-secondary {
     @apply  bg-slate-100 text-black hover:bg-slate-200 rounded-full;
   }
   .button-big {
     @apply px-6 py-3 text-lg;
+  }
+
+  .button-highlight {
+    @apply px-4 py-2 border border-myrose rounded-lg text-sm font-medium text-myred bg-pink-50 hover:bg-pink-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-myrose transition duration-150 ease-in-out ;
+  }
+
+  .arrow-animate {
+    animation: arrow-move 1.5s ease-in-out infinite;
+  }
+
+  @keyframes arrow-move {
+    0%, 100% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(5px);
+    }
   }
