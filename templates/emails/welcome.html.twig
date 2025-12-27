@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background: linear-gradient(to right, #FF00B6, #FF0045);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+        .content {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 0 0 10px 10px;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(to right, #FF00B6, #FF0045);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎵 Bienvenue sur Musikeo !</h1>
+        </div>
+        <div class="content">
+            <h2>Bonjour {{ firstName }} ! 👋</h2>
+            <p>Félicitations ! Votre école <strong>{{ organizationName }}</strong> a été créée avec succès sur Musikeo.</p>
+            
+            <p>Vous pouvez maintenant :</p>
+            <ul>
+                <li>Ajouter vos professeurs</li>
+                <li>Inscrire vos élèves</li>
+                <li>Créer vos cours</li>
+                <li>Gérer vos salles</li>
+            </ul>
+            
+            <p style="text-align: center;">
+                <a href="{{ url('app_dashboard') }}" class="button">Accéder à mon tableau de bord</a>
+            </p>
+            
+            <p>Merci de nous faire confiance ! 🎼</p>
+            
+            <p>
+                L'équipe Musikeo<br>
+                <small>Si vous avez des questions, n'hésitez pas à nous contacter.</small>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
