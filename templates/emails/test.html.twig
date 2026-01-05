@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #4F46E5;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            background-color: #f9fafb;
+            padding: 30px;
+            border: 1px solid #e5e7eb;
+            border-radius: 0 0 5px 5px;
+        }
+        .info {
+            background-color: white;
+            padding: 15px;
+            border-left: 4px solid #4F46E5;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #6b7280;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎵 Musikeo</h1>
+        <p>Test de configuration email</p>
+    </div>
+    
+    <div class="content">
+        <h2>Email de test</h2>
+        <p>Bonjour,</p>
+        
+        <p>Ceci est un email de test pour vérifier que la configuration du serveur SMTP OVH fonctionne correctement.</p>
+        
+        <div class="info">
+            <strong>Informations de test :</strong><br>
+            📧 Expéditeur : noreply@musikeo.fr<br>
+            📅 Date : {{ test_date|date('d/m/Y H:i:s') }}<br>
+            ✅ Serveur : ssl0.ovh.net:465
+        </div>
+        
+        <p>Si vous recevez cet email, cela signifie que :</p>
+        <ul>
+            <li>✅ La connexion au serveur SMTP OVH est fonctionnelle</li>
+            <li>✅ Les identifiants sont corrects</li>
+            <li>✅ Le système d'envoi d'emails est opérationnel</li>
+        </ul>
+        
+        <p>Cordialement,<br>
+        L'équipe Musikeo</p>
+    </div>
+    
+    <div class="footer">
+        <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+        <p>© {{ "now"|date('Y') }} Musikeo - Tous droits réservés</p>
+    </div>
+</body>
+</html>

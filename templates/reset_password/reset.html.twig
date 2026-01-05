@@ -14,15 +14,51 @@
                 </div>
 
                 <div class="mt-8">
+                    {% for message in app.flashes('reset_password_error') %}
+                        <div class="rounded-md bg-red-50 p-4 mb-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm font-medium text-red-800">{{ message }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    {% if resetForm.vars.errors|length > 0 or resetForm.plainPassword.first.vars.errors|length > 0 or resetForm.plainPassword.second.vars.errors|length > 0 %}
+                        <div class="rounded-md bg-red-50 p-4 mb-4 border border-red-200">
+                            <div class="flex">
+                                <div class="m-2 text-sm text-red-700">
+                                    <ul class="ml-4 list-disc space-y-1 pl-5">
+                                        {% for error in resetForm.vars.errors %}
+                                            <li>{{ error.message }}</li>
+                                        {% endfor %}
+                                        {% for error in resetForm.plainPassword.first.vars.errors %}
+                                            <li>{{ error.message }}</li>
+                                        {% endfor %}
+                                        {% for error in resetForm.plainPassword.second.vars.errors %}
+                                            <li>{{ error.message }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
                     {{ form_start(resetForm, {'attr': {'class': 'space-y-6'}}) }}
                         <div>
                             <label for="{{ resetForm.plainPassword.first.vars.id }}" class="block text-sm font-medium leading-6 text-gray-900">
                                 Nouveau mot de passe
                             </label>
+                           
                             <div class="mt-2">
                                 {{ form_widget(resetForm.plainPassword.first, {
                                     'attr': {
-                                        'class': 'block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-myrose sm:text-sm sm:leading-6',
+                                        'class': resetForm.plainPassword.first.vars.errors|length > 0 ? 'input error' : 'input',
                                         'placeholder': '********'
                                     }
                                 }) }}
@@ -33,10 +69,11 @@
                             <label for="{{ resetForm.plainPassword.second.vars.id }}" class="block text-sm font-medium leading-6 text-gray-900">
                                 Confirmer le mot de passe
                             </label>
+                           
                             <div class="mt-2">
                                 {{ form_widget(resetForm.plainPassword.second, {
                                     'attr': {
-                                        'class': 'block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-myrose sm:text-sm sm:leading-6',
+                                        'class': resetForm.plainPassword.second.vars.errors|length > 0 ? 'input error' : 'input',
                                         'placeholder': '********'
                                     }
                                 }) }}
